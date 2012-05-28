@@ -1,0 +1,94 @@
+#!/usr/bin/make -f
+
+include /usr/share/quilt/quilt.make
+
+DEB_HOST_GNU_TYPE	?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE	?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+clean: unpatch
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	rm -f autoconf/config.guess autoconf/config.sub
+
+	[ ! -f autoconf/variables.mak ] || $(MAKE) distclean
+
+	dh_clean
+
+config.status: configure patch
+	dh_testdir
+
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub autoconf/config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess autoconf/config.guess
+endif
+
+	./configure $(CROSS) --prefix=/usr --sbindir=/sbin --mandir=\$${prefix}/share/man --enable-pthreads --with-libwrap --enable-cgi --enable-usb --enable-net --enable-snmp --enable-test --with-cgi-bin=\$${prefix}/lib/cgi-bin/apcupsd --enable-powerflute --enable-nls --with-catgets --with-pid-dir=/var/run --with-log-dir=/var/log --with-lock-dir=/var/lock --with-pwrfail-dir=/etc/apcupsd --disable-install-distdir --with-nis-port=3551 --with-nisip=127.0.0.1 --enable-master-slave --with-css-dir=\$${prefix}/../etc/apcupsd/ CFLAGS="$(CFLAGS)"
+
+build: build-arch build-indep
+build-arch: build-stamp
+build-indep: build-stamp
+build-stamp: config.status
+	dh_testdir
+
+	$(MAKE)
+
+	touch build-stamp
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+
+	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp prefix=/usr sysconfdir=/etc/apcupsd sbindir=/sbin install
+
+	# Installing debian additions
+	install -D -m 0755 debian/local/killpower debian/tmp/etc/apcupsd/killpower
+	install -D -m 0755 debian/local/ups-monitor debian/tmp/etc/apcupsd/ups-monitor
+
+	# Installing documentation
+	mkdir -p debian/tmp/usr/share/doc/apcupsd
+	cp -r doc debian/tmp/usr/share/doc/apcupsd
+
+	# Installing examples
+	cp -r examples debian/tmp/usr/share/doc/apcupsd
+
+binary: binary-arch binary-indep
+
+binary-arch: install
+	dh_testdir -a
+	dh_testroot -a
+	dh_installchangelogs -a ChangeLog
+	dh_installdocs -a
+	dh_installexamples -a
+	dh_install -a --sourcedir=debian/tmp
+	dh_installinit -a --no-restart-on-upgrade --init-script=apcupsd -- start 41 1 2 3 4 5 . stop 80 0 6 .
+	dh_installman -a
+	dh_link -a
+	dh_strip -a
+	dh_compress -a -Xusr/share/doc/apcupsd/examples
+	dh_fixperms -a
+	dh_makeshlibs -a
+	dh_installdeb -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary-indep: install
+	dh_testdir -i
+	dh_testroot -i
+	dh_installchangelogs -i ChangeLog
+	dh_installdocs -i
+	dh_install -i --sourcedir=debian/tmp
+	dh_lintian -i
+	dh_compress -i -Xusr/share/doc/apcupsd/doc
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+.PHONY: clean build install binary binary-arch binary-indep

@@ -1,0 +1,6 @@
+/etc/apcupsd/ups-monitor /etc/init.d/ups-monitor
+/usr/share/man/man8/apcupsd.8 /usr/share/man/man1/apcaccess.1
+/usr/share/man/man8/apcupsd.8 /usr/share/man/man1/apcnisd.1
+/usr/share/man/man8/apcupsd.8 /usr/share/man/man1/apctest.1
+/usr/share/man/man8/apcupsd.8 /usr/share/man/man1/powerflute.1
+/usr/share/man/man8/apcupsd.8 /usr/share/man/man1/smtp.1

@@ -1,0 +1,23 @@
+Author: Justin Pryzby <justinpryzby@users.sourceforge.net>
+Description: Fixes typo in apcupsd manpage (Closes: #516045).
+
+--- a/platforms/debian/apcupsd.8
++++ b/platforms/debian/apcupsd.8
+@@ -30,7 +30,7 @@ There is now no communication between "a
+ The "apcupsd" daemon now supports the networking mode. In this mode,
+ one machine is configured as a master, with UPS attached to the serial
+ port. Other machines (max. 20) are configured as a slaves. Master has a
+-network connection with slaves and send them informations about UPS
++network connection with slaves and send them information about UPS
+ status. Both Master and Slaves open and close there sockets on a regular
+ basis. If someone gets lost nobody gets to upset.
+ .LP
+@@ -264,7 +264,7 @@ ranging from 0-3 are assigned the learne
+ Valid for UPSes capable of Internal EPROM programming.
+ .br
+ This allows the setting of the noise maker that many have removed
+-because of the annoiance factor.  These settings are based on discrete
++because of the annoyance factor.  These settings are based on discrete
+ events related to the remaining capacity of the UPS.
+ .br
+ 0 always

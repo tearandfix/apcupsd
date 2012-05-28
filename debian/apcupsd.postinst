@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+
+. /usr/share/debconf/confmodule
+db_version 2.0
+
+case "$1" in
+	configure)
+		db_get "apcupsd/warning" || true
+		[ "$RET" = "false" ] && exit 0
+		;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+
+		;;
+
+	*)
+		echo "postinst called with unknown argument \`$1'" >&2
+		exit 1
+		;;
+esac
+
+db_stop
+
+#DEBHELPER#
+
+exit 0

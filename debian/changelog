@@ -1,0 +1,753 @@
+apcupsd (3.14.10-2) unstable; urgency=low
+
+  * [16893a8] Support serial UPS connection on kfreebsd.
+    Thanks to Steven Chamberlain (Closes: #674081)
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Mon, 28 May 2012 10:42:44 +0200
+
+apcupsd (3.14.10-1) unstable; urgency=low
+
+  [ Stefan Ritter ]
+  * [bf056fd] Update 02-man-typo.patch to fix typo in manpage
+  * [854b4f7] Add debian/source/format
+
+  [ Giuseppe Iuculano ]
+  * [5a688de] Imported Upstream version 3.14.10
+  * [33fae57] Remove hal from Suggests (Closes: #615216)
+  * [4ea4476] Refreshed patches
+  * [c391cb2] debian/rules: Provide build-arch and build-indep recommended targets
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Fri, 21 Oct 2011 11:52:04 +0200
+
+apcupsd (3.14.8-2) unstable; urgency=low
+
+  [ Stefan Ritter ]
+  * [0501677] Added myself to maintainers
+  * [78e21ff] Fixed broken links in documentation, thanks to Ross Boylan
+    (Closes: #525460)
+  * [cbbe4c8] Bump to Standards-Version 3.8.4
+  * [f31ba10] Added libusb-dev to build-depends
+  * [8e5f563] Added doc-base registration for apcupsd-doc
+
+  [ Giuseppe Iuculano ]
+  * [952c130] Fixed Document field in apcupsd-doc.doc-base
+  * [5443fe8] Do not fail if $ISCONFIGURED is commented in
+    /etc/default/apcupsd (Closes: #502329)
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Tue, 02 Feb 2010 11:29:07 +0100
+
+apcupsd (3.14.8-1) unstable; urgency=low
+
+  * [88549bc] New maintainer, thanks to Daniel Baumann for the prior
+    work on apcupsd (Closes: #543830)
+  * [40874e0] Added a watch file
+  * [676be8e] Imported Upstream version 3.14.8
+    - Fix missing WALL in apccontrol (Closes: #546019)
+  * [28eb1d5] Removed tetex-bin from Build-Depends (Closes: #562353)
+  * [d29a49a] Added a README.source
+  * [17bad30] debian/apcupsd.prerm: Remove the prepended path in killall
+  * [6b8aa3b] Added rst2pdf and python-docutils in Build-Depends
+  * [a5a0164] Bump to Standards-Version 3.8.3
+  * [a38e728] Added ${misc:Depends} in apcupsd-doc depends.
+  * [2dbeafa] debian/control: Removed duplicated section in apcupsd
+  * [0547ba3] Added pkg-config in build-depends
+  * [e770c9f] Added $remote_fs in init run-time dependencies
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Sat, 23 Jan 2010 18:49:41 +0100
+
+apcupsd (3.14.6-3) unstable; urgency=low
+
+  * Updating package to standards version 3.8.3.
+  * Removing vcs fields.
+  * Orphaning package.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 27 Aug 2009 06:52:07 +0200
+
+apcupsd (3.14.6-2) unstable; urgency=low
+
+  * Updating autoconf files in rules (Closes: #529992).
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 30 May 2009 17:44:04 +0200
+
+apcupsd (3.14.6-1) unstable; urgency=low
+
+  * Merging upstream version 3.14.6:
+    - uses consistent prioritie for syslog messages (Closes: #503275).
+  * Using quilt rather than dpatch.
+  * Adding patch from Justin Pryzby <justinpryzby@users.sourceforge.net>
+    to fix typo in apcupsd manpage (Closes: #516045).
+  * Using correct rfc-2822 date formats in changelog.
+  * Updating package to standards 3.8.1.
+  * Rewriting copyright file in machine-interpretable format.
+  * Using common directory to keep debian additions in the debian
+    directory.
+  * Updating rules file to current state of the art.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 18 May 2009 18:29:51 +0200
+
+apcupsd (3.14.5-2) unstable; urgency=low
+
+  * Adding replaces apcupsd to apcupsd-doc (Closes: #514586).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 10 Feb 2009 15:11:00 +0100
+
+apcupsd (3.14.5-1) unstable; urgency=low
+
+  * Updating to standards 3.8.0.
+  * Updating vcs fields in control file.
+  * Using patch-stamp rather than patch in rules file.
+  * Replacing obsolete dh_clean -k with dh_prep.
+  * Merging upstream version 3.14.5.
+  * Removing unneeded chmod calls on examples in rules.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 25 Jan 2009 03:27:00 +0100
+
+apcupsd (3.14.4-1) unstable; urgency=low
+
+  * Removing ChangeLog.old from apcupds.docs, got removed upstream.
+  * Removing 01-mipsel.dpatch, not required anymore.
+  * Updating clean target for new upstream version.
+  * Removing watch file.
+  * Using lintian debhelper to install lintian overrides.
+  * Shortening package long descriptions.
+  * Adding vcs fields in control file.
+  * Upgrading package to debhelper 7.
+  * Merging upstream version 3.14.4.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 21 May 2008 10:24:00 +0200
+
+apcupsd (3.14.3-2) unstable; urgency=medium
+
+  * Adding lsb init header to ups-monitor (Closes: #471787).
+  * Removing config files when purging (Closes: #454910).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 01 Apr 2008 10:51:00 +0100
+
+apcupsd (3.14.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 26 Jan 2008 12:54:00 +0100
+
+apcupsd (3.14.2-2) unstable; urgency=low
+
+  * Bumping to new policy.
+  * Using new homepage field in control.
+  * Don't hide make errors in clean target of rules.
+  * Using versioned packages within own binary packages.
+  * Suggesting apache as httpd.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 27 Dec 2007 09:04:00 +0100
+
+apcupsd (3.14.2-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 09 Oct 2007 10:11:00 +0200
+
+apcupsd (3.14.1-3) unstable; urgency=low
+
+  * Applied patch from Tero Janka <tero.janka@mbnet.fi> to not call apcaccess
+    in commfailure mails (Closes: #409734).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 14 Aug 2007 13:30:00 +0200
+
+apcupsd (3.14.1-2) unstable; urgency=low
+
+  * Updated build-depends for libwrap transition (Closes: #436313).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 07 Aug 2007 08:18:00 +0200
+
+apcupsd (3.14.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 01 Jun 2007 20:19:00 +0200
+
+apcupsd (3.14.0-4) unstable; urgency=low
+
+  * Upload to unstable.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 25 May 2007 10:00:00 +0200
+
+apcupsd (3.14.0-3) experimental; urgency=low
+
+  * New maintainer (Closes: #424711).
+  * Redone debian packaging from scratch.
+  * Moved upstream examples to -doc package.
+  * Uploading to experimental to not interfere testing migration of 3.14.0-2.1.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 17 May 2007 09:18:00 +0200
+
+apcupsd (3.14.0-2.1) unstable; urgency=high
+
+  * Non-maintainer upload during BSP.
+  * Fix failure on purge when debconf is not available (Closes: #416642).
+  * Fix removal of rc.d links on purge (Closes: #356749).
+  * Rename libsnmp9-dev build dependency to libsnmp-dev for easier
+    transitions.
+
+ -- Luk Claes <luk@debian.org>  Wed, 16 May 2007 23:32:21 +0200
+
+apcupsd (3.14.0-2) unstable; urgency=low
+
+  * Master/Slave break issue in News (Closes: #414377) (Closes: #413048)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sun, 11 Mar 2007 20:18:59 +0100
+
+apcupsd (3.14.0-1) unstable; urgency=low
+
+  * Newer Upstream release
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 26 Feb 2007 09:52:05 +0100
+
+apcupsd (3.12.4-2) unstable; urgency=low
+
+  * Added conflict with pmake (Closes: #396351)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Thu, 02 Nov 2006 12:20:39 +0100
+
+apcupsd (3.12.4-1) unstable; urgency=low
+
+  * New Upstream Release
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Wed, 2 Oct 2006 10:20:31 +0200
+apcupsd (3.12.3-1) unstable; urgency=low
+
+  * New Upstream Release
+  * Fixed restart issue (Closes: #366983)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Wed, 17 May 2006 12:20:31 +0200
+
+apcupsd (3.12.1-2) unstable; urgency=low
+
+  * Fixed Apcupsd.postrm (Closes: #351190)
+  * Apcupsd will now start later at boot time (Closes: #348771)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 13 Feb 2006 11:24:42 +0100
+
+apcupsd (3.12.1-1) unstable; urgency=low
+
+  * New Upstream Release, Happy new 2006
+  * Newer Config system (Closes: #338322)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sun, 08 Jan 2006 11:30:21 +0100
+
+apcupsd (3.10.18-4) unstable; urgency=low
+
+  * Modified Build-deps to libgd2-noxpm-dev (Closes: #344640)
+  * Added Patch from Hugo Vanwoerkom to compile example client
+    (Closes: #344757)
+  * Added Suggest to hal and udev
+  * There's the need to patch the kernel to solve the problem
+    related to bug 330487 please see
+    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=330487
+  * Build against libsnmp9 (Closes: #331621)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 27 Dec 2005 14:20:18 +0100
+
+apcupsd (3.10.18-3) unstable; urgency=low
+
+  * Removed Build-dep from libgd2-dev (Closes: #343920)
+  * Added config to enable nis only on 127.0.0.1 (Closes: #343507)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 20 Dec 2005 10:20:45 +0100
+
+apcupsd (3.10.18-2) unstable; urgency=low
+
+  * Rebuild against libssl0.9.8
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 10 Oct 2005 13:01:53 +0200
+
+apcupsd (3.10.18-1) unstable; urgency=low
+
+  * New Upstream Release (Closes: #315928)
+  * apcupsd-3.10.17 is now in stable (Closes: #256261)
+  * Fixed NEWS file (Closes: #310460)
+  * Provides Virtual Package ups-monitor added (Closes: #316398)
+  * Better doc for NISPORT (Closes: #321929)
+  * Other information on NEWS file inserted (Closes: #313642) (Closes: #316932)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Thu, 11 Aug 2005 11:40:35 +0200
+
+apcupsd (3.10.17-2) unstable; urgency=low
+
+  * Moved powerfail from /var/spool/apcupsd to /etc/apcupsd
+    (after some analisys this should not break FHS )
+  * Added killpower script to /etc/apcupsd as suggested by Álvaro Martínez
+    Echevarría  (Closes: #301916)
+  * Added NEWS file
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sun, 03 Apr 2005 12:41:13 +0200
+
+apcupsd (3.10.17-1) unstable; urgency=low
+
+  * New Upstream Release
+  * multimon.cgi links refers to cgi-bin directory (Closes: #301269)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Fri, 25 Mar 2005 17:43:56 +0100
+
+apcupsd (3.10.16-7) unstable; urgency=low
+
+  * splitted apcupsd in three packages: main, doc, cgi (Closes: #296035)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sun, 20 Feb 2005 12:10:56 +0100
+
+apcupsd (3.10.16-6) unstable; urgency=low
+
+  * docbook is no more used therefore it's removed from apcupsd-doc
+    (Closes: #274752)
+  * Applied patch to solve problem with slave configuration (Closes: #282079)
+  * Applied patch to solve the problem of apctest (Closes: #285316)
+  * Adjusted init script to remove pid file on start stop (Closes: #290532)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 15 Feb 2005 15:26:23 +0100
+
+apcupsd (3.10.16-5) unstable; urgency=low
+
+  * Actually i should remove depends from logrotate instead of
+    just adding to changelog
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 07 Feb 2005 18:33:24 +0100
+
+apcupsd (3.10.16-4) unstable; urgency=low
+
+  * Fixed Conflicts with other upses (Closes: #284890)
+  * I forgot to remove depends from logrotate (Closes: #290534)
+  * Fixed POWERFAIL in /etc/default/apcupsd (Closes: #293352)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 07 Feb 2005 18:19:34 +0100
+
+apcupsd (3.10.16-3) unstable; urgency=low
+
+  * Lost ups-monitor readding it
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 29 Nov 2004 18:48:56 +0100
+
+apcupsd (3.10.16-2) unstable; urgency=low
+
+  * The "Why am i NMU-ing myself?" release: nothing has been changed from 16-1
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 15 Nov 2004 12:45:16 +0100
+
+apcupsd (3.10.16-1) unstable; urgency=low
+
+  * Added variable to deal init.d file with upgrades (Closes: #273198)
+  * No more kernel panic (Closes: #270308)
+  * Readded ups-monitor and provide: label (Closes: #277903)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 15 Nov 2004 11:11:14 +0100
+
+apcupsd (3.10.15-3) unstable; urgency=low
+
+  * Added a Patch to close file descriptor (Closes: #270234)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 06 Sep 2004 12:46:43 +0200
+
+apcupsd (3.10.15-2) unstable; urgency=low
+
+  * Added patch from Kern to fix a problem with snmp driver
+    (Closes: #266623)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Wed, 25 Aug 2004 11:45:08 +0200
+
+apcupsd (3.10.15-1) unstable; urgency=low
+
+  * New Upstream Release
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 16 Aug 2004 17:08:33 +0200
+
+apcupsd (3.10.14-1) unstable; urgency=low
+
+  * New Upstream Release
+  * Kern is doing a great job, everybody thanks him!
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Thu, 05 Aug 2004 23:52:47 +0200
+
+apcupsd (3.10.13-5) unstable; urgency=medium
+
+  * Added '|| echo "Not Running"' to apcupsd.init
+    to make apcupsd uninstall correctly (Closes: #261534).
+    Thanks to Philipp Matthias Hahn to report it and suggest
+    on how to fix it
+  * Modified apcupsd man page to point to
+    /usr/share/doc/apcupsd/doc/docbook/manual.html in SEE ALSO
+    section (Closes: #258910)
+  * added safe.apccontrol to examples directory (Closes: #258905)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 26 Jul 2004 21:01:08 +0200
+
+apcupsd (3.10.13-4) unstable; urgency=low
+
+  * Added Conflicts in control file (Closes: #252373)
+  * Removed all references to apcupsd-cgi
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 15 Jun 2004 10:50:58 +0200
+
+apcupsd (3.10.13-3) unstable; urgency=low
+
+  * removed logrotate as suggested on apcupsd ml
+  * merged packages in -doc e main due to the fact that
+    even apcupsd depends on libgd (see bug 240849)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Wed, 02 Jun 2004 11:40:31 +0200
+
+apcupsd (3.10.13-2) unstable; urgency=low
+
+  * Added old patch to fix closing file descriptor (Closes: #236042)
+  * Added some trick to make apcupsd removing even if it's not configured
+    (Closes: #247935)
+  * Apcupsd has been splitted on daemon and cgi package (Closes: #240849),
+    however apcupsd binary still depend on libgd
+  * Added a line on prerm to delete the old cron.daily script
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sat, 15 May 2004 15:32:16 +0200
+
+apcupsd (3.10.13-1) unstable; urgency=low
+
+  * New Upstream Release
+  * Removing ups-monitor also fixed the problem with raid disks (Closes: #238185)
+  * Removed cron to rotate logs (Closes: #242722)
+  * fixed close on fork (Closes: #236042)
+  * No more css in cgi from this release
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Fri, 23 Apr 2004 20:37:00 +0200
+
+apcupsd (3.10.12-1) unstable; urgency=low
+
+  * New Upstream Release
+  * Removed old templates (Closes: #237454)
+  * Changed listening port to 3551 as pointed out by Tomas Vinar - many
+    thanks! - (Closes: #234253)
+  * Added missing apctest (Closes: #242922)
+  * Removed ups-monitor (Closes: #230808)
+  * After some experiment the problem with logrotate seems closed
+    (Closes: #226055)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Thu, 15 Apr 2004 23:56:37 +0200
+
+apcupsd (3.10.11-1.1) unstable; urgency=low
+
+  * NMU to fix RC bug.
+  * Applied patch to close file descriptors to avoid blocking cron runs
+    (Closes: #236042).
+
+ -- Yann Dirson <dirson@debian.org>  Fri, 26 Mar 2004 15:04:30 +0100
+
+apcupsd (3.10.11-1) unstable; urgency=low
+
+  * New Upstream Release
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Wed, 28 Jan 2004 17:11:19 +0100
+
+apcupsd (3.10.10-2) unstable; urgency=medium
+
+  * Removed ;; in platforms/apccontrol.in (Closes: #229485) that
+    can cause trouble during shutdown
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 26 Jan 2004 16:19:55 +0100
+
+apcupsd (3.10.10-1) unstable; urgency=low
+
+  * New Upstream Release that fix some problem with kernel 2.6.x
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Wed, 21 Jan 2004 10:22:35 +0100
+
+apcupsd (3.10.9-3) unstable; urgency=low
+
+  * Changed logrotate script
+  * Modified init.d script
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Fri, 09 Jan 2004 19:28:35 +0100
+
+apcupsd (3.10.9-2) unstable; urgency=low
+
+  * Fixed missing Build-Depends (Closes: #226328)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 06 Jan 2004 12:06:27 +0100
+
+apcupsd (3.10.9-1) unstable; urgency=high
+
+  * New Upstream Release
+  * Upstream Fixed an incorrect sleep (forever)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sat, 03 Jan 2004 02:33:39 +0100
+
+apcupsd (3.10.8-1) unstable; urgency=low
+
+  * New Upstream Release
+  * Fixed madness on rc.d symlinx (Closes: #225643)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Wed, 31 Dec 2003 16:17:01 +0100
+
+apcupsd (3.10.6-5) unstable; urgency=low
+
+  * Fixed up copyright file
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Wed, 17 Dec 2003 12:56:55 +0100
+
+apcupsd (3.10.6-4) unstable; urgency=low
+
+  * Lost my mind release: changed override to extra as it should be
+  * Modified Author email to one working (Closes: #178291)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 10 Nov 2003 17:28:09 +0100
+
+apcupsd (3.10.6-3) unstable; urgency=low
+
+  * Changed default configuration with NetAccess setted to False
+  * Confirmed that --enable-master-slave solved the problem to allow
+    netaccess (Closes: #219414)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 10 Nov 2003 17:05:56 +0100
+
+apcupsd (3.10.6-2) unstable; urgency=low
+
+  * Added --enable-master-slave to configure to enable sharing of information
+    through the net
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Fri, 07 Nov 2003 19:50:29 +0100
+
+apcupsd (3.10.6-1) unstable; urgency=low
+
+  * New Upstream Release
+  * New Mantainer (me) :-)
+  * Merged changelog of apcupsd-devel package and apcupsd main
+  * I think i'll drop apcupsd-devel 'cause it has no reason to exist
+  * Closing some very old bugs, that depends on the old version of apcupsd
+    and that don't exist in this release, if people still have problem they
+    are welcomed to reopen them (Closes: #93324) (Closes: #98989)
+    (Closes: #131727) (Closes: #131814) (Closes: #134151) (Closes: #136835)
+    (Closes: #178553) (Closes: #211682) (Closes: #216532) (Closes: #102026)
+    (Closes: #178291) (Closes: #182807) (Closes: #174615) (Closes: #130270)
+    (Closes: #132839) (Closes: #179544) (Closes: #205981)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 28 Oct 2003 20:43:11 +0100
+
+apcupsd-devel (3.10.6.20030912-12Sep03-1) unstable; urgency=low
+
+  * New Upstream Release
+  * rewritten /etc/init.d/apcupsd-devel so people won't go crazy when
+    there are changes (Closes: #213259)
+  * For Kern it seems there aren't problem to logs event to events file
+    (Closes: #201999)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Fri, 10 Oct 2003 15:15:49 +0200
+
+apcupsd-devel (3.10.6.20030805-05Aug03-3) unstable; urgency=low
+
+  * added symlink from etc/apcupsd/ups-monitor to etc/init.d/ups-monitor
+  * changed postinst and postrm
+  * changed rc.d level for a better performance
+  * changed init.d to rm /var/spool/apcupsd/powerfail even when restarting
+    the daemon
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sat, 23 Aug 2003 18:57:14 +0200
+
+apcupsd-devel (3.10.6.20030805-05Aug03-2) unstable; urgency=low
+
+  * Changed from usr/sbin to sbin
+  * Modified init.d script to rm the right powerfail file.
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Thu, 21 Aug 2003 14:40:46 +0200
+
+apcupsd-devel (3.10.6.20030805-05Aug03-1) unstable; urgency=low
+
+  * New Upstream Version
+  * if powerfail is in /var/spool/apcupsd/powerfail then
+    ups-monitor has to look in /var/spool/... not /etc ..
+  * added some scripts in /etc/apcupsd
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 18 Aug 2003 17:15:56 +0200
+
+apcupsd-devel (3.10.6.18Jul03-3) unstable; urgency=low
+
+  * Fixed /etc/init.d/apcupsd-devel restart adding --oknodo as suggested
+    by Andrew Suffield (Closes: #204002)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sun, 03 Aug 2003 22:48:35 +0200
+
+apcupsd-devel (3.10.6.18Jul03-2) unstable; urgency=low
+
+  * Fixed a problem in rules script to configure powerfail PATH
+    now it points to /var/spool/apcupsd/powerfail (Closes: #203937)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sun, 03 Aug 2003 11:25:31 +0200
+
+apcupsd-devel (3.10.6.18Jul03-1) unstable; urgency=low
+
+  * 23 July release check example directory for some addons
+  * New Upstream version
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Fri, 25 Jul 2003 20:37:25 +0200
+
+apcupsd-devel (3.10.6-5) unstable; urgency=low
+
+  * Fixed override disparity (gee gtg to bed soon)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Fri, 23 May 2003 00:13:19 +0200
+
+apcupsd-devel (3.10.6-4) unstable; urgency=low
+
+  * Recompiled against libssl0.9.7
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Thu, 22 May 2003 23:11:43 +0200
+
+apcupsd-devel (3.10.6-3) unstable; urgency=low
+
+  * checked examples files for lost ones
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 13 May 2003 13:15:08 +0200
+
+apcupsd-devel (3.10.6-2) unstable; urgency=low
+
+  * changed Conflicts to point to apcupsd (Closes: #192937)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Sun, 11 May 2003 19:58:38 +0200
+
+apcupsd-devel (3.10.6-1) unstable; urgency=low
+
+  * New upstream release
+  * removed apcupsd.8.gz from apcupsd-devel-doc package (Closes: #185839)
+  * Modified src/drivers/snmp/snmp.c from
+    int snmp_ups_program_eeprom(UPSINFO *ups, int command, char *data) to
+    int snmp_ups_program_eeprom(UPSINFO *ups, int command, void *data)
+    to make it compile with snmp support
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 06 May 2003 23:52:33 +0200
+
+apcupsd-devel (3.10.5-1) unstable; urgency=high
+
+  * New Upstream Version
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 28 Jan 2003 15:05:59 +0100
+
+apcupsd-devel (3.10.3-3) unstable; urgency=low
+
+  * Fixed override problems
+  * Added patch to fix config.guess and config.sub to latest autotools-dev
+    package (Closes: #178697)
+  * Added dpatch to Build-Depends
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Tue, 28 Jan 2003 15:05:59 +0100
+
+apcupsd-devel (3.10.3-2) unstable; urgency=low
+
+  * Correct Dependencies (thanks to Unit 3 for reporting
+  and Craig Small for help) (Closes: #178614)
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Mon, 27 Jan 2003 23:52:20 +0100
+
+apcupsd-devel (3.10.3-1) unstable; urgency=low
+
+  * Initial Release. (Closes: #177000)
+  * Modified Makefile.in to best fit DFHS
+  * Added some examples as well some tips in Readme.Debian file
+
+ -- Samuele Giovanni Tonon <samu@debian.org>  Wed, 22 Jan 2003 17:40:41 +0100
+
+apcupsd (3.8.5-1.3) unstable; urgency=low
+
+  * NMU
+  * Remove automake1.5 dependency (Closes: #205981)
+
+ -- Julien Danjou <acid@debian.org>  Fri, 29 Aug 2003 12:00:25 +0200
+
+apcupsd (3.8.5-1.2) unstable; urgency=low
+
+  * NMU (Bug squashing party)
+  * Depend on autoconf2.13 (closes: #179544)
+  * Fix format string vulnerability (closes: #174615)
+
+ -- Lukas Geyer <lukas@debian.org>  Sun, 16 Mar 2003 00:02:39 +0500
+
+apcupsd (3.8.5-1.1) unstable; urgency=low
+
+  * Non-mantainer upload.
+  * Added /etc/cron.daily/apcupsd and /etc/init.d/ups-monitor
+  to debian/apcupsd.conffiles (Closes: #132839)
+  * Applied a patch to make apcupsd compile in hppa.
+  Thanks to James Troup (Closes: #130270)
+
+ -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Sat, 16 Feb 2002 14:57:07 +0000
+
+apcupsd (3.8.5-1) unstable; urgency=low
+
+  * New upstream release. (closes: #109387, #93346)
+  * Update build depends on debhelper. (closes: #94889)
+  * Update mail paths. (closes: #109445, #98499)
+  * Fix postrm script for removing configuration directory. (closes: #104284)
+  * Update apccontrol script. (closes: #103035, #99281)
+  * Enable libwrap support.
+  * Update to standards version 3.5.6.
+
+ -- Martin Mitchell <martin@debian.org>  Sun, 20 Jan 2002 02:04:27 +1100
+
+apcupsd (3.8.1.5-1) unstable; urgency=low
+
+  * New upstream release. (closes: #79045, #74060, #83059)
+  * Provide ups-monitor. (closes: #78058)
+  * Update to standards version 3.5.2.
+  * Update build depends. (closes: #70159)
+  * Change section to admin.
+  * Move events and status files to appropriate places. (closes: #63745)
+
+ -- Martin Mitchell <martin@debian.org>  Sun, 08 Apr 2001 22:57:24 +1000
+
+apcupsd (3.7.1-2) unstable; urgency=low
+
+  * Fix init.d script problem with environment variable.
+
+ -- Martin Mitchell <martin@debian.org>  Wed, 17 May 2000 01:20:06 +1000
+
+apcupsd (3.7.1-1) unstable; urgency=low
+
+  * New upstream release. (closes: #57131, #61777, #52206, #61636, #43447)
+  * Update copyright information.
+  * Update to standards version 3.1.1.
+  * Remove implicit bash dependency. (closes: #46505)
+
+ -- Martin Mitchell <martin@debian.org>  Tue, 25 Apr 2000 14:21:54 +1000
+
+apcupsd (3.6.2-1) unstable; urgency=low
+
+  * New upstream release. (closes: #42653)
+  * New maintainer.
+  * Update to standards version 3.0.1.
+  * Remove files and substvars. (closes: #41599)
+
+ -- Martin Mitchell <martin@debian.org>  Mon, 09 Aug 1999 01:11:48 +1000
+
+apcupsd (3.6.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Binaries now reside in /usr/sbin (upstream change)
+
+ -- Leon Breedt <ljb@debian.org>  Wed, 14 Jul 1999 14:35:57 +0200
+
+apcupsd (3.5.8-4) unstable; urgency=low
+
+  * Removed empty README.Debian (closes: #38956)
+  * Fixed cron.daily to restart quietly (closes: #41056)
+
+ -- Leon Breedt <ljb@debian.org>  Fri, 09 Jul 1999 21:39:29 +0200
+
+apcupsd (3.5.8-3) unstable; urgency=low
+
+  * Various edits to /etc/apcupsd.conf
+  * Fixed /etc/init.d/apcupsd
+  * Added logrotate script
+
+ -- Leon Breedt <ljb@debian.org>  Mon, 07 Jun 1999 17:33:59 +0200
+
+apcupsd (3.5.8-2) unstable; urgency=low
+
+  * Added apcupsd.conf warning
+
+ -- Leon Breedt <ljb@debian.org>  Tue, 25 May 1999 21:42:53 +0200
+
+apcupsd (3.5.8-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Leon Breedt <ljb@debian.org>  Sun, 23 May 1999 20:47:12 +0200

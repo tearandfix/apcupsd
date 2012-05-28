@@ -1,0 +1,23 @@
+--- a/autoconf/configure.in
++++ b/autoconf/configure.in
+@@ -349,6 +349,7 @@ case $host in
+    *-*-hpux*)    AC_DEFINE(HAVE_HPUX_OS)    ;;
+    *-*-linux*)   AC_DEFINE(HAVE_LINUX_OS)   ;;
+    *-*-freebsd*) AC_DEFINE(HAVE_FREEBSD_OS) ;;
++   *-*-kfreebsd*)AC_DEFINE(HAVE_FREEBSD_OS) ;;
+    *-*-netbsd*)  AC_DEFINE(HAVE_NETBSD_OS)  ;;
+    *-*-openbsd*) AC_DEFINE(HAVE_OPENBSD_OS) ;;
+    *-*-bsdi*)    AC_DEFINE(HAVE_BSDI_OS)    ;;
+--- a/configure
++++ b/configure
+@@ -9509,6 +9509,10 @@ _ACEOF
+ #define HAVE_FREEBSD_OS 1
+ _ACEOF
+  ;;
++   *-*-kfreebsd*) cat >>confdefs.h <<\_ACEOF
++#define HAVE_FREEBSD_OS 1
++_ACEOF
++ ;;
+    *-*-netbsd*)  cat >>confdefs.h <<\_ACEOF
+ #define HAVE_NETBSD_OS 1
+ _ACEOF

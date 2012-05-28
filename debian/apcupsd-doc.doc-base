@@ -1,0 +1,7 @@
+Document: apcupsd-doc
+Title: HTML Documentation of apcupsd 
+Section: System/Administration
+
+Format: HTML
+Index: /usr/share/doc/apcupsd/doc/home-page/index.html
+Files: /usr/share/doc/apcupsd/doc/home-page/*.html
