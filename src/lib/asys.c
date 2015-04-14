@@ -28,21 +28,6 @@
 
 #include "apc.h"
 
-/* Guarantee that the string is properly terminated */
-char *astrncpy(char *dest, const char *src, int maxlen)
-{
-   strncpy(dest, src, maxlen - 1);
-   dest[maxlen - 1] = 0;
-   return dest;
-}
-
-char *astrncat(char *dest, const char *src, int maxlen)
-{
-   strncat(dest, src, maxlen - 1);
-   dest[maxlen - 1] = 0;
-   return dest;
-}
-
 #ifndef DEBUG
 void *amalloc(size_t size)
 {
@@ -212,4 +197,35 @@ void _v(char *file, int line, pthread_mutex_t *m)
 }
 #endif   /* DEBUG_MUTEX */
 
+#ifndef HAVE_STRLCPY
+size_t strlcpy(char *dst, const char *src, size_t size)
+{
+   size_t cnt = 0;
+   if (size)
+   {
+      while (*src && cnt < size-1)
+      {
+         *dst++ = *src++;
+         ++cnt;
+      }
+      *dst = '\0';
+   }
+   while (*src++)
+      ++cnt;
+   return cnt;
+}
+#endif
 
+#ifndef HAVE_STRLCAT
+size_t strlcat(char *dst, const char *src, size_t size)
+{
+   size_t cnt = 0;
+   while (*dst && cnt < size)
+   {
+      ++dst;
+      ++cnt;
+   }
+   cnt += strlcpy(dst, src, size-cnt);
+   return cnt;
+}
+#endif

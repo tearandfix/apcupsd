@@ -1,9 +1,11 @@
 Author: Tero Janka <tero.janka@mbnet.fi>
 Description: apcaccess call blocking commfailure mails (Closes: #409734).
 
---- a/platforms/etc/commfailure.in
-+++ b/platforms/etc/commfailure.in
-@@ -15,7 +15,5 @@ MSG="$HOSTNAME Communications with UPS l
+Index: apcupsd/platforms/etc/commfailure.in
+===================================================================
+--- apcupsd.orig/platforms/etc/commfailure.in
++++ apcupsd/platforms/etc/commfailure.in
+@@ -13,7 +13,5 @@ MSG="$HOSTNAME Communications with UPS $
     echo "Subject: $MSG"
     echo " "
     echo "$MSG"

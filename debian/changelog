@@ -1,3 +1,19 @@
+apcupsd (3.14.12-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * src/apcaccess.c: declare "ch" as int to match getopt return type. Fixes
+    apcaccess on ARM. (Closes: #770984)
+
+ -- Emanuele Rocca <ema@debian.org>  Tue, 14 Apr 2015 09:14:33 +0200
+
+apcupsd (3.14.12-1) unstable; urgency=low
+
+  * [84a0ea2] Imported Upstream version 3.14.12
+  * [9de1ff1] Refreshed patches
+  * [9141683] Use hardening flags
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Sun, 19 Oct 2014 18:50:43 +0200
+
 apcupsd (3.14.10-2) unstable; urgency=low
 
   * [16893a8] Support serial UPS connection on kfreebsd.

@@ -38,6 +38,11 @@ namespace Snmp
    // **************************************************************************
    struct Variable
    {
+      Variable() : valid(false) {}
+      Variable(Asn::Identifier t, unsigned int i) : 
+         valid (true), type(t), i32(i), u32(i) {}
+
+      bool valid;
       Asn::Identifier type;
       int i32;
       unsigned int u32;
@@ -188,7 +193,8 @@ namespace Snmp
       ~SnmpEngine();
 
       bool Open(const char *host, unsigned short port = SNMP_AGENT_PORT, 
-                const char *comm = "public", bool trap = false);
+                const char *comm = "public");
+      bool EnableTraps();
       void Close();
 
       struct OidVar

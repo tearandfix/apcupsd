@@ -4,7 +4,7 @@
  *
  * This C file is derived from the UPS-MIB module.
  *
- * $Id: rfc1628-mib-mgr.c,v 1.4 2005/11/05 21:10:47 adk0212 Exp $
+ * $Id: rfc1628-mib-mgr.c,v 1.4 2005-11-05 21:10:47 adk0212 Exp $
  */
 
 #include "apc.h"

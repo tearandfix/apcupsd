@@ -14,41 +14,27 @@ consumption rates. Apcupsd is licensed under the GPL version 2.
 <p>
 
 <h2>Apcupsd Releases</h2>
-<h3><i><u>Stable:</u></i>&nbsp;3.14.9 (22 July 2011)
-[&nbsp;<a href="https://sourceforge.net/projects/apcupsd/files/apcupsd%20-%20Stable/3.14.9/">Source</a>&nbsp;]
-<!--[&nbsp;<a href="https://sourceforge.net/projects/apcupsd/files/rpms%20-%20Stable/3.14.9/">RPMs</a>&nbsp;]-->
-[&nbsp;<a href="https://sourceforge.net/projects/apcupsd/files/win-binaries%20-%20Stable/3.14.9/">Windows</a>&nbsp;]
-[&nbsp;<a href="https://sourceforge.net/projects/apcupsd/files/osx-binaries%20-%20Stable/3.14.9/">OSX</a>&nbsp;]
+<h3><i><u>Stable:</u></i>&nbsp;3.14.11 (31 January 2014)
+[&nbsp;<a href="https://sourceforge.net/projects/apcupsd/files/apcupsd%20-%20Stable/3.14.11/">Source</a>&nbsp;]
+<!--[&nbsp;<a href="https://sourceforge.net/projects/apcupsd/files/rpms%20-%20Stable/3.14.10/">RPMs</a>&nbsp;]-->
+[&nbsp;<a href="https://sourceforge.net/projects/apcupsd/files/win-binaries%20-%20Stable/3.14.11/">Windows</a>&nbsp;]
+[&nbsp;<a href="https://sourceforge.net/projects/apcupsd/files/osx-binaries%20-%20Stable/3.14.11/">OSX</a>&nbsp;]
 </h3>
-Release 3.14.9 brings a number of new features including...
-<ul>
-<li> SNMP enhancements inclduing support for MGE and RFC1628 MIBs
-<li> Support for USB on 64-bit Windows platforms
-</ul>
-Please see the 
-<a href="http://apcupsd.cvs.sourceforge.net/viewvc/*checkout*/apcupsd/apcupsd/ReleaseNotes?pathrev=Release-3_14_9">
-ReleaseNotes</a> for details.
+Release 3.14.11 adds MODBUS protocol support for newer APC UPSes. It also 
+includes digital signatures on the Windows USB driver and the Windows installer 
+package which should make installation on recent versions of Windows easier.
 <p>
-Apcupsd 3.14.9 is the latest stable release, containing many bug fixes and
+The MODBUS protocol gives access to advanced UPS features on newer UPSes that 
+previously only supported Microlink. A firmware upgrade may be required to 
+enable MODBUS support on some UPSes. 
+Please see the
+<a href="http://apcupsd.cvs.sourceforge.net/viewvc/*checkout*/apcupsd/apcupsd/ReleaseNotes?pathrev=Release-3_14_11">
+ReleaseNotes</a> for further details.
+<p>
+Apcupsd 3.14.11 is the latest stable release, containing many bug fixes and
 new features over previous releases. Users of all previous
 versions are encouraged to upgrade.
 <p>
-<b><u>New Features in the 3.14.x series:</u></b>
-<ul>
-<li>USB support for new platforms: Windows, Mac OS X, Solaris 10
-<li>Native Windows port
-<li>Improved tray icon support on Win32 (monitor multiple remote instances)
-<li>Menubar monitoring application for Mac OS X (apcagent)
-<li>PowerChute Network Shutdown driver
-<li>Rewritten SNMP driver with no SNMP library dependencies
-<li>GAPCMON GUI monitoring tool
-<li>Unreliable MASTER/SLAVE networking mode is removed
-<li>New configuration directives to set paths at runtime
-<li>New configuration directive to set UPS polling interval (POLLTIME)
-<li>New Makefiles supporting dependencies and parallel build
-<li>Updated documentation
-<li>Support for the QNX operating system
-</ul>
 <h2><a href="manual/manual.html" target="_top">Online Manual</a> or a
 <a href="manual/manual.pdf" target="_top">PDF Version of
 the Manual</a> </h2> If you want to learn a bit more about
@@ -92,7 +78,7 @@ capabilities, David provides setup instructions and scripts to produce
 high quality, daily PDF graphs of all the important UPS power conditions. 
 To learn more about this, please visit <a
 target="_top"
-href="http://www.ecst.csuchico.edu/~dranch/LINUX/TrinityOS/cHTML/TrinityOS-c-36.html">
+href="http://www.trinityos.com/LINUX/TrinityOS/cHTML/TrinityOS-c-36.html">
 his site</a>.
 
 <h2>APC</h2>

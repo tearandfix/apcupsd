@@ -2,3 +2,4 @@
 02-man-typo.patch
 03-fix-broken-links-in-documentation.patch
 04-kfreebsd-support.patch
+05-apcaccess-arm.patch

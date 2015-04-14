@@ -1,8 +1,10 @@
 Author: Justin Pryzby <justinpryzby@users.sourceforge.net>
 Description: Fixes typo in apcupsd manpage (Closes: #516045).
 
---- a/platforms/debian/apcupsd.8
-+++ b/platforms/debian/apcupsd.8
+Index: apcupsd/platforms/debian/apcupsd.8
+===================================================================
+--- apcupsd.orig/platforms/debian/apcupsd.8
++++ apcupsd/platforms/debian/apcupsd.8
 @@ -30,7 +30,7 @@ There is now no communication between "a
  The "apcupsd" daemon now supports the networking mode. In this mode,
  one machine is configured as a master, with UPS attached to the serial

@@ -1,6 +1,8 @@
 Fix #525460 
---- a/doc/home-page/index.html
-+++ b/doc/home-page/index.html
+Index: apcupsd/doc/home-page/index.html
+===================================================================
+--- apcupsd.orig/doc/home-page/index.html
++++ apcupsd/doc/home-page/index.html
 @@ -17,8 +17,8 @@
  <a href="http://sourceforge.net/project/stats/detail.php?group_id=54413&ugn=apcupsd&type=prweb">Site Visits</a><br>
  &nbsp;<br>
@@ -12,10 +14,10 @@ Fix #525460
  &nbsp;<br>
  <font color="#0000ff" size="+2"><b>Downloads</b></font><br>
  <a href="http://prdownloads.sourceforge.net/apcupsd">All Files</a><br>
-@@ -85,16 +85,16 @@ versions are encouraged to upgrade.
- <li>Updated documentation
- <li>Support for the QNX operating system
- </ul>
+@@ -71,16 +71,16 @@ Apcupsd 3.14.11 is the latest stable rel
+ new features over previous releases. Users of all previous
+ versions are encouraged to upgrade.
+ <p>
 -<h2><a href="manual/manual.html" target="_top">Online Manual</a> or a
 -<a href="manual/manual.pdf" target="_top">PDF Version of
 +<h2><a href="../manual/manual.html" target="_top">Online Manual</a> or a

@@ -1,6 +1,8 @@
---- a/autoconf/configure.in
-+++ b/autoconf/configure.in
-@@ -349,6 +349,7 @@ case $host in
+Index: apcupsd/autoconf/configure.in
+===================================================================
+--- apcupsd.orig/autoconf/configure.in
++++ apcupsd/autoconf/configure.in
+@@ -350,6 +350,7 @@ case $host in
     *-*-hpux*)    AC_DEFINE(HAVE_HPUX_OS)    ;;
     *-*-linux*)   AC_DEFINE(HAVE_LINUX_OS)   ;;
     *-*-freebsd*) AC_DEFINE(HAVE_FREEBSD_OS) ;;
@@ -8,9 +10,11 @@
     *-*-netbsd*)  AC_DEFINE(HAVE_NETBSD_OS)  ;;
     *-*-openbsd*) AC_DEFINE(HAVE_OPENBSD_OS) ;;
     *-*-bsdi*)    AC_DEFINE(HAVE_BSDI_OS)    ;;
---- a/configure
-+++ b/configure
-@@ -9509,6 +9509,10 @@ _ACEOF
+Index: apcupsd/configure
+===================================================================
+--- apcupsd.orig/configure
++++ apcupsd/configure
+@@ -10312,6 +10312,10 @@ _ACEOF
  #define HAVE_FREEBSD_OS 1
  _ACEOF
   ;;

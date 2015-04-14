@@ -4,6 +4,7 @@ Class = Battery
 ClassGuid={72631e54-78a4-11d0-bcf7-00aa00b7b32a}
 Provider = %ProviderName%
 DriverVer = 01/10/2010,1.0.0.0
+CatalogFile = apcupsd.cat
 
 ; ================== Class section ==================
 [ClassInstall32]
