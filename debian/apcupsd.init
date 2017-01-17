@@ -12,11 +12,15 @@
 # Description:		apcupsd provides UPS power management for APC products.
 ### END INIT INFO
 
+test -f /lib/lsb/init-functions || exit 1
+. /lib/lsb/init-functions
+
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/sbin/apcupsd
 CONFIG=/etc/default/apcupsd
 NAME=apcupsd
 DESC="UPS power management"
+APCACCESS=/sbin/apcaccess
 
 test -x $DAEMON || exit 0
 test -e $CONFIG || exit 0
@@ -36,7 +40,7 @@ case "$1" in
 	start)
 		echo -n "Starting $DESC: "
 
-		rm -f /etc/apcupsd/powerfail
+		/lib/apcupsd/prestart
 
 		if [ "`pidof apcupsd`" = "" ]
 		then
@@ -64,7 +68,6 @@ case "$1" in
 		;;
 
 	status)
-		#/sbin/apcaccess status
 		$APCACCESS status
 		;;
 

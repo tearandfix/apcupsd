@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #import <Cocoa/Cocoa.h>
@@ -34,6 +34,16 @@ class StatMgr;
 #if __MAC_OS_X_VERSION_MAX_ALLOWED < 1060
 @protocol NSTableViewDataSource <NSObject> @end
 #endif 
+
+// NSUserNotificationCenterDelegate was added in 10.8
+#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1080
+@protocol NSUserNotificationCenterDelegate <NSObject> @end
+#endif
+
+// NSMenuDelegate was added in 10.6
+#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1060
+@protocol NSMenuDelegate <NSObject> @end
+#endif
 
 @interface StatusTableDataSource: NSObject <NSTableViewDataSource>
 {
@@ -64,8 +74,7 @@ class StatMgr;
    row:(int)rowIndex;
 @end
 
-
-@interface AppController: NSObject
+@interface AppController: NSObject <NSMenuDelegate, NSUserNotificationCenterDelegate>
 {
    // Status item shown in the status bar
    NSStatusItem *statusItem;
@@ -132,6 +141,9 @@ class StatMgr;
 
    // C++ object which handles polling the UPS
    StatMgr *statmgr;
+
+   // If system support Notification Center (10.8 and above)
+   BOOL haveNotifCtr;
 
    // Runloop variables
    BOOL running;

@@ -25,20 +25,20 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #define APCUPSD
 
 #ifdef APCUPSD
 
+#include <pwd.h>
+
 # include "apc.h"
 # undef main
 # define my_name_is(x, y, z)
 # define bstrdup(x) strdup(x)
-UPSINFO myUPS;
-UPSINFO *core_ups = &myUPS;
 
 # define Pmsg2 Dmsg
 # define Pmsg1 Dmsg
@@ -240,7 +240,8 @@ int main(int argc, char *argv[])
          mailhost = "localhost";
    }
 
-#ifdef HAVE_WIN32
+#ifdef HAVE_MINGW
+   int WSA_Init(void);
    WSA_Init();
 #endif
 
@@ -353,7 +354,7 @@ hp:
    /* Add RFC822 date */
    localtime_r(&now, &tm);
 
-#ifdef HAVE_WIN32
+#ifdef HAVE_MINGW
    // Annoyingly, Windows does not properly implement %z (it always spells
    // out the timezone name) so we need to emulate it manually.
    i = strftime(buf, sizeof(buf), "%a, %d %b %Y %H:%M:%S ", &tm);

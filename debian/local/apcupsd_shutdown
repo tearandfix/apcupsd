@@ -1,0 +1,11 @@
+#!/bin/sh
+# apcupsd: kill power via UPS (if powerfail situation)
+# (Originally from Fedora.)
+
+# See if this is a powerfail situation.
+if [ -f /etc/apcupsd/powerfail ]; then
+  echo
+  echo "APCUPSD will now power off the UPS"
+  echo
+  /etc/apcupsd/apccontrol killpower
+fi

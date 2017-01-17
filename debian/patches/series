@@ -1,5 +1,8 @@
 01-commfailure.patch
-02-man-typo.patch
-03-fix-broken-links-in-documentation.patch
 04-kfreebsd-support.patch
-05-apcaccess-arm.patch
+06-fix-nologin.patch
+08-fix-loglevels.patch
+09-remove-extra-subjectline.patch
+10-dont-install-smtp.patch
+11-wall-on-umounted-usr.patch
+12-no-version-in-conffiles.patch

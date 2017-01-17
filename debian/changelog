@@ -1,3 +1,81 @@
+apcupsd (3.14.14-0.3) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Split pre-start actions from init script to /usr/share/apcupsd/prestart.
+  * Add systemd unit, ignoring /etc/defaults/apcupsd. (Closes: #849401)
+  * Set default UPSTYPE/UPSCABLE to "usb", to avoid poking the serial line
+    with the default configuration.
+  * Remove APCACCESS variable from /etc/defaults/apcupsd.
+  * Drop explicit build-dependency on libssl-dev. libsnmp-dev pulls it
+    in for us.
+  * Build with --enable-modbus-usb. (Closes: #844418)
+  * Revert to libusb-dev for modbus-usb. The generic Linux driver does
+    not actually use libusb.
+
+ -- Christian Hofstaedtler <zeha@debian.org>  Tue, 17 Jan 2017 00:00:03 +0000
+
+apcupsd (3.14.14-0.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix FTBFS on arch:all buildd, patch from Santiago Vila.
+    (Closes: #831804)
+
+ -- Christian Hofstaedtler <zeha@debian.org>  Thu, 21 Jul 2016 12:03:26 +0000
+
+apcupsd (3.14.14-0.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * New upstream version. (Closes: #448147, #580225, #824942)
+    * Refresh and drop obsolete patches.
+    * Follow docs path change from homepage to manual
+    * Update source path for manpages
+    * Drop options configure no longer understands
+  * Set source format to 3.0 (quilt) instead of using quilt directly
+  * Convert to dh-style build rules and use compat 9
+  * Explicitly set path to shutdown(1) (Closes: #828834)
+  * Enable hardening flags for daemons
+  * Use cat when /usr is already umounted or wall is missing (Closes: #709612)
+  * Remove long gone Uploader, thanks Stefan Ritter (Closes: #831451)
+  * Hook killpower into systemd-shutdown.
+    Hook script from Fedora, thanks. And mask ups-monitor.service,
+    which is only relevant for /etc/init.d/halt.
+    (Closes: #807689)
+  * Update Homepage (Closes: #816121)
+  * Remove version number from generated conffiles (Closes: #322970)
+
+ -- Christian Hofstaedtler <zeha@debian.org>  Sat, 16 Jul 2016 14:10:23 +0000
+
+apcupsd (3.14.12-1.3) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Don't create the /etc/nologin file if apcupsd.conf contains
+    "NOLOGON disable". closes:#731497
+  * Change log levels for a number of messages to more logical levels.
+    closes:#808280
+  * Don't pass parameters to update-rc.d. closes:#822352,#610429
+  * Remove Subject: lines in the body of email messages. closes:#655241
+  * Don't build and install /sbin/smtp, it's not used. closes:#624155
+  * In the init.d script, check for a /etc/nologin file that apcupsd created
+    (i.e. contains "POWER FAILURE") and if found, delete it; upon reboot there
+    isn't any reason to keep apcupsd's /etc/nologin file.
+  * In the init.d script, source /lib/lsb/init-functions .
+  * Remove sourceforge logo from HTML pages in apcupsd-doc package (lintian
+    privacy-breach-logo error).
+  * Use "command -v invoke-rc.d" instead of "[ -x /usr/sbin/invoke-rc.d ]" in
+    postrm to appease lintian.
+  * Bumped Standards-Version to 3.9.8 (no additional changes necessary).
+
+ -- Paul Slootman <paul@debian.org>  Wed, 29 Jun 2016 11:15:14 +0200
+
+apcupsd (3.14.12-1.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Build-Depend on libusb-1.0-0-dev instead of libusb-dev, this also
+    fixes USB communication on kfreebsd. (Closes: #728446, #810396)
+  * Build-Depend on libgd-dev instead of the deprecated libgd2-noxpm-dev.
+
+ -- Carsten Leonhardt <leo@debian.org>  Mon, 29 Feb 2016 16:13:41 +0100
+
 apcupsd (3.14.12-1.1) unstable; urgency=medium
 
   * Non-maintainer upload.

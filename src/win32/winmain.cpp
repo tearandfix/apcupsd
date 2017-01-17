@@ -16,15 +16,17 @@
 #include <signal.h>
 #include <pthread.h>
 #include <errno.h>
-#include "defines.h"
 
 // Apcupsd UNIX main entrypoint
 extern int ApcupsdMain(int argc, char **argv);
 
 // Custom headers
+#include "apcconfig.h"
 #include "winups.h"
 #include "winservice.h"
 #include "compat.h"
+#include "defines.h"
+#include "winapi.h"
 
 // Standard command-line flag definitions
 char ApcupsdRunService[] =        "/service";
@@ -130,6 +132,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                  MB_OK | MB_ICONINFORMATION);
       return 1;
    }
+   return 0;
 }
 
 // Callback for processing Windows messages
@@ -190,6 +193,7 @@ void *ApcupsdMain(LPVOID lpwThreadParam)
 
    // In case apcupsd returns, terminate application
    ApcupsdTerminate();
+   return NULL;
 }
 
 // This thread runs on Windows 2000 and higher. It monitors for the
@@ -258,7 +262,7 @@ static void WaitForExit()
       return;
 
    // On Win2K and above we spawn a thread to watch for exit requests.
-   HANDLE evtthread;
+   HANDLE evtthread = NULL;
    if (g_os_version >= WINDOWS_2000) {
       runthread = true;
       evtthread = CreateThread(NULL, 0, EventThread, NULL, 0, NULL);

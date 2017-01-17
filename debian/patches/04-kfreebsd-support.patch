@@ -1,27 +1,28 @@
-Index: apcupsd/autoconf/configure.in
-===================================================================
---- apcupsd.orig/autoconf/configure.in
-+++ apcupsd/autoconf/configure.in
-@@ -350,6 +350,7 @@ case $host in
-    *-*-hpux*)    AC_DEFINE(HAVE_HPUX_OS)    ;;
-    *-*-linux*)   AC_DEFINE(HAVE_LINUX_OS)   ;;
-    *-*-freebsd*) AC_DEFINE(HAVE_FREEBSD_OS) ;;
-+   *-*-kfreebsd*)AC_DEFINE(HAVE_FREEBSD_OS) ;;
-    *-*-netbsd*)  AC_DEFINE(HAVE_NETBSD_OS)  ;;
-    *-*-openbsd*) AC_DEFINE(HAVE_OPENBSD_OS) ;;
-    *-*-bsdi*)    AC_DEFINE(HAVE_BSDI_OS)    ;;
-Index: apcupsd/configure
-===================================================================
---- apcupsd.orig/configure
-+++ apcupsd/configure
-@@ -10312,6 +10312,10 @@ _ACEOF
- #define HAVE_FREEBSD_OS 1
+diff --git a/autoconf/configure.in b/autoconf/configure.in
+index fbb3c6b..da017a0 100644
+--- a/autoconf/configure.in
++++ b/autoconf/configure.in
+@@ -359,6 +359,7 @@ case $host in
+    *-*-hpux*)    AC_DEFINE(HAVE_HPUX_OS,,    [Define if building for HPUX])    ;;
+    *-*-linux*)   AC_DEFINE(HAVE_LINUX_OS,,   [Define if building for Linux])   ;;
+    *-*-freebsd*) AC_DEFINE(HAVE_FREEBSD_OS,, [Define if building for FreeBSD]) ;;
++   *-*-kfreebsd*)AC_DEFINE(HAVE_FREEBSD_OS,, [Define if building for kFreeBSD]) ;;
+    *-*-netbsd*)  AC_DEFINE(HAVE_NETBSD_OS,,  [Define if building for NetBSD])  ;;
+    *-*-openbsd*) AC_DEFINE(HAVE_OPENBSD_OS,, [Define if building for OpenBSD]) ;;
+    *-*-bsdi*)    AC_DEFINE(HAVE_BSDI_OS,,    [Define if building for BSDi])    ;;
+diff --git a/configure b/configure
+index a6af032..f03eec0 100755
+--- a/configure
++++ b/configure
+@@ -10483,6 +10483,11 @@ cat >>confdefs.h <<\_ACEOF
+ #define HAVE_FREEBSD_OS /**/
  _ACEOF
   ;;
-+   *-*-kfreebsd*) cat >>confdefs.h <<\_ACEOF
-+#define HAVE_FREEBSD_OS 1
++   *-*-kfreebsd*)
++cat >>confdefs.h <<\_ACEOF
++#define HAVE_FREEBSD_OS /**/
 +_ACEOF
 + ;;
-    *-*-netbsd*)  cat >>confdefs.h <<\_ACEOF
- #define HAVE_NETBSD_OS 1
- _ACEOF
+    *-*-netbsd*)
+ cat >>confdefs.h <<\_ACEOF
+ #define HAVE_NETBSD_OS /**/

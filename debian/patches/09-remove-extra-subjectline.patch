@@ -1,0 +1,65 @@
+Index: apcupsd-3.14.12/platforms/etc/changeme.in
+===================================================================
+--- apcupsd-3.14.12.orig/platforms/etc/changeme.in
++++ apcupsd-3.14.12/platforms/etc/changeme.in
+@@ -10,8 +10,6 @@ HOSTNAME=`hostname`
+ MSG="$HOSTNAME UPS $1 battery needs changing NOW."
+ #
+ (
+-   echo "Subject: $MSG"
+-   echo " "
+    echo "$MSG"
+    echo " "
+    @sbindir@/apcaccess status
+Index: apcupsd-3.14.12/platforms/etc/commfailure.in
+===================================================================
+--- apcupsd-3.14.12.orig/platforms/etc/commfailure.in
++++ apcupsd-3.14.12/platforms/etc/commfailure.in
+@@ -10,8 +10,6 @@ HOSTNAME=`hostname`
+ MSG="$HOSTNAME Communications with UPS $1 lost"
+ #
+ (
+-   echo "Subject: $MSG"
+-   echo " "
+    echo "$MSG"
+ ) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
+ exit 0
+Index: apcupsd-3.14.12/platforms/etc/commok.in
+===================================================================
+--- apcupsd-3.14.12.orig/platforms/etc/commok.in
++++ apcupsd-3.14.12/platforms/etc/commok.in
+@@ -10,8 +10,6 @@ HOSTNAME=`hostname`
+ MSG="$HOSTNAME Communications with UPS $1 restored"
+ #
+ (
+-   echo "Subject: $MSG"
+-   echo " "
+    echo "$MSG"
+    echo " "
+    @sbindir@/apcaccess status
+Index: apcupsd-3.14.12/platforms/etc/offbattery.in
+===================================================================
+--- apcupsd-3.14.12.orig/platforms/etc/offbattery.in
++++ apcupsd-3.14.12/platforms/etc/offbattery.in
+@@ -10,8 +10,6 @@ HOSTNAME=`hostname`
+ MSG="$HOSTNAME UPS $1 Power has returned"
+ #
+ (
+-   echo "Subject: $MSG"
+-   echo " "
+    echo "$MSG"
+    echo " "
+    @sbindir@/apcaccess status
+Index: apcupsd-3.14.12/platforms/etc/onbattery.in
+===================================================================
+--- apcupsd-3.14.12.orig/platforms/etc/onbattery.in
++++ apcupsd-3.14.12/platforms/etc/onbattery.in
+@@ -10,8 +10,6 @@ HOSTNAME=`hostname`
+ MSG="$HOSTNAME UPS $1 Power Failure !!!"
+ #
+ (
+-   echo "Subject: $MSG"
+-   echo " "
+    echo "$MSG"
+    echo " "
+    @sbindir@/apcaccess status

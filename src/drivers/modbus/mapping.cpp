@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 /*
@@ -64,8 +64,8 @@ const RegInfo APCModbusMapping::REG_STATE_OF_CHARGE_PCT          = {  130,  1, D
 const RegInfo APCModbusMapping::REG_BATTERY_VOLTAGE              = {  131,  1, DT_INT,    5 };
 const RegInfo APCModbusMapping::REG_BATTERY_DATE                 = {  133,  1, DT_UINT      };
 const RegInfo APCModbusMapping::REG_BATTERY_TEMPERATURE          = {  135,  1, DT_INT,    7 };
-const RegInfo APCModbusMapping::REG_OUTPUT_0_REAL_POWER          = {  136,  1, DT_UINT,   8 };
-const RegInfo APCModbusMapping::REG_OUTPUT_0_APPARENT_POWER      = {  138,  1, DT_UINT,   8 };
+const RegInfo APCModbusMapping::REG_OUTPUT_0_REAL_POWER_PCT      = {  136,  1, DT_UINT,   8 };
+const RegInfo APCModbusMapping::REG_OUTPUT_0_APPARENT_POWER_PCT  = {  138,  1, DT_UINT,   8 };
 const RegInfo APCModbusMapping::REG_OUTPUT_0_CURRENT             = {  140,  1, DT_UINT,   5 };
 const RegInfo APCModbusMapping::REG_OUTPUT_0_VOLTAGE             = {  142,  1, DT_UINT,   6 };
 const RegInfo APCModbusMapping::REG_OUTPUT_FREQUENCY             = {  144,  1, DT_UINT,   7 };

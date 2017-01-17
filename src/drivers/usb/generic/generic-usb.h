@@ -18,16 +18,16 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #ifndef _GENERICUSB_H
 #define _GENERICUSB_H
 
 #include "../usb.h"
-#include "hidutils.h"
 #include "libusb.h"
+#include "HidUps.h"
 
 class GenericUsbUpsDriver: public UsbUpsDriver
 {
@@ -73,13 +73,11 @@ private:
    void reinitialize_private_structure();
    bool open_usb_device();
    bool usb_link_check();
-   bool init_device(struct usb_device *dev);
    bool populate_uval(USB_INFO *info, unsigned char *data, USB_VALUE *uval);
 
-   usb_dev_handle *_fd;             /* Our UPS control pipe fd when open */
-   report_desc_t _rdesc;            /* Device's report descrptor */
    USB_INFO *_info[CI_MAXCI + 1];   /* Info pointers for each command */
    bool _linkcheck;
+   HidUps _hidups;
 };
 
 #endif

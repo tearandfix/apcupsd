@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -44,7 +44,8 @@ const char *const units[] = {
 /* Get and print status from apcupsd NIS server */
 static int do_pthreads_status(const char *host, int port, const char *par, int flags)
 {
-   int sockfd, n;
+   sock_t sockfd;
+   int n;
    char recvline[MAXSTRING + 1];
    char *line;
 
@@ -140,13 +141,10 @@ int main(int argc, char **argv)
    int port = NISPORT;
    int flags = 0;
    FILE *cfg;
-
-#ifdef HAVE_MINGW
-   WSA_Init();                   /* init MS networking */
-#endif
+   UPSINFO ups;
 
    // Process standard options
-   char ch;
+   int ch;
    while ((ch = getopt(argc, argv, "f:h:p:u")) != -1)
    {
       switch (ch)
@@ -180,7 +178,6 @@ int main(int argc, char **argv)
    if ((cfg = fopen(cfgfile, "r")))
    {
       fclose(cfg);
-      UPSINFO ups;
       memset(&ups, 0, sizeof(UPSINFO));
       init_ups_struct(&ups);
       check_for_config(&ups, cfgfile);
@@ -205,7 +202,7 @@ int main(int argc, char **argv)
       host = argv[optind + 1];
 
    // If still no host, use default
-   if (!host)
+   if (!host || !*host)
       host = DEFAULT_HOST;
 
    // Separate host and port

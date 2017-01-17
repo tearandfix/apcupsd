@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #ifndef _DEFINES_H
@@ -177,6 +177,9 @@ enum {
    CI_LowBattery,
    CI_Calibration,
    CI_AlarmTimer,
+   CI_OutputCurrent,
+   CI_LoadApparent,
+   CI_NomApparent,
 
    /* Only seen on the BackUPS Pro USB (so far) */
    CI_BUPBattCapBeforeStartup,  
@@ -364,18 +367,7 @@ enum {
    CMDBATTATTACH         /* Battery reconnected */
 };
 
-/*
- * Simple way of handling varargs for those compilers that
- * don't support varargs in #defines.
- */
-#define Error_abort0(fmd) error_out(__FILE__, __LINE__, fmd)
-#define Error_abort1(fmd, arg1) error_out(__FILE__, __LINE__, fmd, arg1)
-#define Error_abort2(fmd, arg1,arg2) error_out(__FILE__, __LINE__, fmd, arg1,arg2)
-#define Error_abort3(fmd, arg1,arg2,arg3) error_out(__FILE__, __LINE__, fmd, arg1,arg2,arg3)
-#define Error_abort4(fmd, arg1,arg2,arg3,arg4) error_out(__FILE__, __LINE__, fmd, arg1,arg2,arg3,arg4)
-#define Error_abort5(fmd, arg1,arg2,arg3,arg4,arg5) error_out(__FILE__, __LINE__, fmd, arg1,arg2,arg3,arg4,arg5)
-#define Error_abort6(fmd, arg1,arg2,arg3,arg4,arg5,arg6) error_out(__FILE__, __LINE__, fmd, arg1,arg2,arg3,arg4,arg5,arg5)
-
+#define Error_abort(fmd, args...)   error_out_wrapper(__FILE__, __LINE__, fmd, ##args)
 
 /* Debug Messages that are printed */
 #ifdef DEBUG
@@ -383,9 +375,13 @@ enum {
 #define Dmsg(lvl, msg, args...)     d_msg(__FILE__, __LINE__, lvl, msg, ##args)
 void d_msg(const char *file, int line, int level, const char *fmt, ...);
 
+#define hex_dump(lvl, data, len)    h_dump(__FILE__, __LINE__, (lvl), (data), (len))
+void h_dump(const char *file, int line, int level, const void *data, unsigned int len);
+
 #else
 
-#define Dmsg(lvl, msg, args...)
+#define Dmsg(lvl, msg, args...)  do { } while(0)
+#define hex_dump(lvl, data, len) do { } while(0)
 
 #endif
 
@@ -395,14 +391,14 @@ void d_msg(const char *file, int line, int level, const char *fmt, ...);
    do { \
       int errstat; \
       if ((errstat=pthread_mutex_lock(&(x)))) \
-         error_out(__FILE__, __LINE__, "Mutex lock failure. ERR=%s\n", strerror(errstat)); \
+         error_out_wrapper(__FILE__, __LINE__, "Mutex lock failure. ERR=%s\n", strerror(errstat)); \
    } while(0)
 
 #define V(x) \
    do { \
       int errstat; \
       if ((errstat=pthread_mutex_unlock(&(x)))) \
-         error_out(__FILE__, __LINE__, "Mutex unlock failure. ERR=%s\n", strerror(errstat)); \
+         error_out_wrapper(__FILE__, __LINE__, "Mutex unlock failure. ERR=%s\n", strerror(errstat)); \
    } while(0)
 
 
@@ -427,6 +423,88 @@ void d_msg(const char *file, int line, int level, const char *fmt, ...);
 #endif
 #ifndef MAX
 #define MAX(a,b) ( (a) > (b) ? (a) : (b) )
+#endif
+
+/* On Windows, sockets are SOCKET, everywhere else they are int */
+#ifdef HAVE_MINGW
+typedef SOCKET sock_t;
+#else
+typedef int sock_t;
+#define INVALID_SOCKET -1
+#endif
+
+/*
+ * For HP-UX the definition of FILENAME_MAX seems not conformant with
+ * POSIX standard. To avoid any problem we are forced to define a
+ * private macro. This accounts also for other possible problematic OSes.
+ * If none of the standard macros is defined, fall back to 256.
+ */
+#if defined(FILENAME_MAX) && FILENAME_MAX > 255
+# define APC_FILENAME_MAX FILENAME_MAX
+#elif defined(PATH_MAX) && PATH_MAX > 255
+# define APC_FILENAME_MAX PATH_MAX
+#elif defined(MAXPATHLEN) && MAXPATHLEN > 255
+# define APC_FILENAME_MAX MAXPATHLEN
+#else
+# define APC_FILENAME_MAX 256
+#endif
+
+#ifndef O_NDELAY
+# define O_NDELAY 0
+#endif
+
+#ifndef O_CLOEXEC
+# define O_CLOEXEC 0
+#endif
+
+/* ETIME not on BSD, incl. Darwin */
+#ifndef ETIME
+# define ETIME ETIMEDOUT
+#endif
+
+/* If no system localtime_r(), forward declaration of our internal substitute. */
+#if !defined(HAVE_LOCALTIME_R) && !defined(localtime_r)
+extern struct tm *localtime_r(const time_t *timep, struct tm *tm);
+#endif
+
+/* If no system inet_pton(), forward declaration of our internal substitute. */
+#if !defined(HAVE_INETPTON)
+
+/* Define constants based on RFC 883, RFC 1034, RFC 1035 */
+#define NS_PACKETSZ     512        /* maximum packet size */
+#define NS_MAXDNAME     1025       /* maximum domain name */
+#define NS_MAXCDNAME    255        /* maximum compressed domain name */
+#define NS_MAXLABEL     63         /* maximum length of domain label */
+#define NS_HFIXEDSZ     12         /* #/bytes of fixed data in header */
+#define NS_QFIXEDSZ     4          /* #/bytes of fixed data in query */
+#define NS_RRFIXEDSZ    10         /* #/bytes of fixed data in r record */
+#define NS_INT32SZ      4          /* #/bytes of data in a u_int32_t */
+#define NS_INT16SZ      2          /* #/bytes of data in a u_int16_t */
+#define NS_INT8SZ       1          /* #/bytes of data in a u_int8_t */
+#define NS_INADDRSZ     4          /* IPv4 T_A */
+#define NS_IN6ADDRSZ    16         /* IPv6 T_AAAA */
+#define NS_CMPRSFLGS    0xc0       /* Flag bits indicating name compression. */
+#define NS_DEFAULTPORT  53         /* For both TCP and UDP. */
+extern int inet_pton(int af, const char *src, void *dst);
+#endif
+
+#ifndef HAVE_STRFTIME
+# define strftime(msg, max, format, tm) \
+   strlcpy(msg, "time not available", max)
+#endif   /* !HAVE_STRFTIME */
+
+/* Solaris doesn't define this */
+#ifndef INADDR_NONE
+#define INADDR_NONE ((in_addr_t)-1)
+#endif
+
+/* Determine if the C(++) compiler requires complete function prototype  */
+#ifndef __P
+# if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
+#  define __P(x) x
+# else
+#  define __P(x) ()
+# endif
 #endif
 
 #endif   /* _DEFINES_H */

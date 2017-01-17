@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -125,9 +125,11 @@ void do_server(UPSINFO *ups)
    struct sockaddr_in cli_addr;    /* client's address */
    struct sockaddr_in serv_addr;   /* our address */
    int tlog;
-   int turnon = 1;
    struct s_arg *arg;
    struct in_addr local_ip;
+#ifndef HAVE_MINGW
+   int turnon = 1;
+#endif
 
    for (tlog = 0; (ups = attach_ups(ups)) == NULL; tlog -= 5 * 60) {
       if (tlog <= 0) {
@@ -147,7 +149,7 @@ void do_server(UPSINFO *ups)
    }
 
    /* Open a TCP socket */
-   for (tlog = 0; (sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0; tlog -= 5 * 60) {
+   for (tlog = 0; (sockfd = socket_cloexec(AF_INET, SOCK_STREAM, 0)) < 0; tlog -= 5 * 60) {
       if (tlog <= 0) {
          tlog = 60 * 60;
          log_event(ups, LOG_ERR, "apcserver: cannot open stream socket");
@@ -223,35 +225,40 @@ void do_server(UPSINFO *ups)
  */
 void *handle_client_request(void *arg)
 {
+   int len;
    FILE *events_file;
    char line[MAXSTRING];
-   char errmsg[] = "Invalid command\n";
-   char notavail[] = "Not available\n";
-   char notrun[] = "Apcupsd not running\n";
+   const char errmsg[] = "Invalid command\n";
+   const char notavail[] = "Not available\n";
+   const char notrun[] = "Apcupsd internal error\n";
    int nsockfd = ((struct s_arg *)arg)->newsockfd;
    UPSINFO *ups = ((struct s_arg *)arg)->ups;
+   int fd;
+   free(arg);
 
    pthread_detach(pthread_self());
+
    if ((ups = attach_ups(ups)) == NULL) {
       net_send(nsockfd, notrun, sizeof(notrun));
       net_send(nsockfd, NULL, 0);
-      free(arg);
-      Error_abort0("Cannot attach SYSV IPC.\n");
+      net_close(nsockfd);
+      return NULL;
    }
 
    for (;;) {
       /* Read command */
-      if (net_recv(nsockfd, line, MAXSTRING) <= 0)
+      if ((len = net_recv(nsockfd, line, sizeof(line))) <= 0)
          break;                    /* connection terminated */
 
-      if (strncmp("status", line, 6) == 0) {
+      if (len == 6 && strncmp("status", line, 6) == 0) {
          if (output_status(ups, nsockfd, status_open, status_write,
                status_close) < 0) {
             break;
          }
-      } else if (strncmp("events", line, 6) == 0) {
-         if ((ups->eventfile[0] == 0) ||
-             ((events_file = fopen(ups->eventfile, "r")) == NULL)) {
+      } else if (len == 6 && strncmp("events", line, 6) == 0) {
+         if (ups->eventfile[0] == 0 ||
+             (fd = open(ups->eventfile, O_RDONLY|O_CLOEXEC)) == -1 ||
+             (events_file = fdopen(fd, "r")) == NULL) {
             net_send(nsockfd, notavail, sizeof(notavail));
             if (net_send(nsockfd, NULL, 0) < 0)
                break;
@@ -274,7 +281,6 @@ void *handle_client_request(void *arg)
 
    net_close(nsockfd);
 
-   free(arg);
    detach_ups(ups);
    return NULL;
 }

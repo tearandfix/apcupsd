@@ -9,6 +9,82 @@ IF YOU USE THE OLD STYLE MASTER/SLAVE NETWORKING MODE, BE SURE TO READ THE
 3.14.0 RELEASE NOTES BELOW.
 
 
+3.14.14 -- 31 May 2016
+
+BUG FIXES
+
+  * win32: Fix missing DLLs when installing only apctray
+
+  * Fixes for socket error handling. Resolves apcaccess crash when connection 
+    fails as well as several other theoretical issues.
+
+  * MODBUS/USB error handling (COMMLOST) improvements for faulty USB links
+
+  * Fix hiddev binding when usbfs is mounted on /dev/bus/usb instead of 
+    /proc/bus/usb. This is necessary for switching between MODBUS/USB and
+    USB/HID on Linux.
+
+  * Update GPLv2 text and FSF address to match current versions from FSF.
+
+  * Various fixes for potential issues suggested by Coverity Scan
+
+  * MacOS X port support for El Capitan System Integrity Protection (SIP)
+    aka "rootless"
+
+  * Fix shutdown failure on Windows when UPSNAME includes spaces
+
+  * Fix building bsd-usb driver
+    (This was broken when modbus-usb support was added.)
+
+FEATURES
+
+  * Add status display for output current as well as apparent power
+
+
+3.14.13 -- 02 February 2015
+
+NEW FEATURES
+
+  * MODBUS USB support
+  
+    Previous releases supported MODBUS serial (RS232). This release adds
+    support for MODBUS over USB. This protocol is preferable to the normal
+    USB HID driver because it offers access to more UPS data readouts and
+    controls. The only configuration file change needed versus MODBUS serial
+    is to change UPSCABLE to usb and use an empty DEVICE setting. See the 
+    MODBUS section of the apcupsd manual for more details.
+
+  * Support for Apple Notification Center on Mac OS X (replaces Growl)
+
+  * Apple install packages and binaries are signed with an Apple Developer
+    key for compatibility with Gate Keeper
+
+  * Windows USB driver has been updated with additional USB identifiers to
+    support future APC products.
+
+BUG FIXES
+
+  * Use launchd for startup on Mac OS X as the old Startup Items mechanism is 
+    no longer supported in 10.10 and above
+
+  * Fix apcaccess on ARM systems where char is unsigned by default
+
+  * Fix several potential issues identified by Coverity static analysis
+
+  * Numerous other fixes and improvements all over the code, many of them
+    submitted by users...Thank you!
+
+MISC
+
+  * Windows port now builds with the same configure and make system as the
+    other targets, no need to maintain a special hardcoded Makefile.
+
+  * Many cleanups to the Windows port codebase
+
+  * Prebuilt binaries for Mac OS X no longer support PowerPC systems or 
+    Mac OS X 10.4 and older
+
+
 3.14.12 -- 29 March 2014             (Maintenance Release)
 
 NEW FEATURES

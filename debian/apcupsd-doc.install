@@ -1,1 +1,2 @@
-/usr/share/doc/apcupsd
+doc/manual usr/share/doc/apcupsd
+examples usr/share/doc/apcupsd

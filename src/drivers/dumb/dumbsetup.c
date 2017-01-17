@@ -20,8 +20,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -53,8 +53,8 @@ bool DumbUpsDriver::Open()
    }
 #endif
 
-   if ((_ups->fd = open(opendev, O_RDWR | O_NOCTTY | O_NDELAY)) < 0)
-      Error_abort2("Cannot open UPS port %s: %s\n", opendev, strerror(errno));
+   if ((_ups->fd = open(opendev, O_RDWR | O_NOCTTY | O_NDELAY | O_CLOEXEC)) < 0)
+      Error_abort("Cannot open UPS port %s: %s\n", opendev, strerror(errno));
 
    /* Cancel the no delay we just set */
    int cmd = fcntl(_ups->fd, F_GETFL, 0);

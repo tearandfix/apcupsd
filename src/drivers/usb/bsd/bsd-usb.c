@@ -20,14 +20,13 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
 #include "hidutils.h"
 #include "bsd-usb.h"
-#include "../usb_common.h"
 #include <dev/usb/usb.h>
 #include <dev/usb/usbhid.h>
 
@@ -84,7 +83,7 @@ bool BsdUsbUpsDriver::init_device(const char *devname)
    unsigned char *rdesc;
    char intdevname[USB_MAX_DEVNAMELEN + 5 + 3 + 1];
 
-   fd = open(devname, O_RDWR | O_NOCTTY);
+   fd = open(devname, O_RDWR | O_NOCTTY | O_CLOEXEC);
    if (fd == -1)
       return false;
 
@@ -142,7 +141,7 @@ bool BsdUsbUpsDriver::init_device(const char *devname)
    intdevname[strlen(intdevname) - 1] = '1';
 #endif
 
-   fd = open(intdevname, O_RDONLY | O_NOCTTY);
+   fd = open(intdevname, O_RDONLY | O_NOCTTY | O_CLOEXEC);
    if (fd == -1) {
       Dmsg(100, "Unable to open interrupt pipe %s: %s\n", intdevname,
          strerror(errno));
@@ -217,7 +216,7 @@ bool BsdUsbUpsDriver::open_usb_device()
    /* Max of 10 USB busses */
    for (i = 0; i < 10; i++) {
       busname[8] = '0' + i;
-      fd = open(busname, O_RDWR | O_NOCTTY);
+      fd = open(busname, O_RDWR | O_NOCTTY | O_CLOEXEC);
       if (fd == -1)
          continue;
 
@@ -369,7 +368,7 @@ bool BsdUsbUpsDriver::pusb_ups_get_capabilities()
          info = (USB_INFO *)malloc(sizeof(USB_INFO));
          if (!info) {
             write_unlock(_ups);
-            Error_abort0("Out of memory.\n");
+            Error_abort("Out of memory.\n");
          }
 
          // Populate READ report data

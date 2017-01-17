@@ -2,18 +2,37 @@ Source: apcupsd
 Section: admin
 Priority: extra
 Maintainer: Giuseppe Iuculano <iuculano@debian.org>
-Uploaders: Stefan Ritter <xeno@thehappy.de>
-Build-Depends: debhelper (>= 7), autotools-dev, quilt, mawk | awk, libgd2-noxpm-dev, libncurses5-dev | libncurses-dev, libsnmp-dev, libssl-dev, libwrap0-dev, po-debconf, texinfo, tcpd, rst2pdf, python-docutils, pkg-config, libusb-dev
-Standards-Version: 3.8.4
-Homepage: http://www.apcupsd.com/
+Build-Depends: autotools-dev,
+               debhelper (>= 9),
+               dh-autoreconf,
+               dh-systemd,
+               libgd-dev,
+               libmodbus-dev,
+               libncurses5-dev | libncurses-dev,
+               libsnmp-dev,
+               libusb-dev,
+               libwrap0-dev,
+               mawk | awk,
+               pkg-config,
+               po-debconf,
+               python-docutils,
+               python-imaging,
+               rst2pdf,
+               tcpd,
+               texinfo
+Standards-Version: 3.9.8
+Homepage: http://www.apcupsd.org/
 
 Package: apcupsd
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
 Conflicts: ups-monitor
 Provides: ups-monitor
-Recommends: apcupsd-doc
-Suggests: apcupsd-cgi, udev
+Recommends: apcupsd-doc,
+            s-nail | mailx
+Suggests: apcupsd-cgi,
+          udev
 Description: APC UPS Power Management (daemon)
  apcupsd provides UPS power management for APC products, including most BackUPS
  series models (including USB), SmartUPS V/S, SmartUPS (NET/RM), and Matrix
@@ -26,7 +45,9 @@ Description: APC UPS Power Management (daemon)
 Package: apcupsd-cgi
 Section: web
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, apcupsd (= ${binary:Version})
+Depends: apcupsd (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends}
 Suggests: apache2 | httpd
 Description: APC UPS Power Management (web interface)
  apcupsd provides UPS power management for APC products, including most BackUPS

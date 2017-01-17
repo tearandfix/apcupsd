@@ -58,8 +58,8 @@
 
    You should have received a copy of the GNU General Public
    License along with this program; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-   MA 02111-1307, USA.
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1335, USA.
 
  */
 
@@ -217,7 +217,7 @@ int ApcSmartUpsDriver::getline(char *s, int len)
          } else if (errno == EBADF) {
             return FAILURE;               /* We're probably shutting down */
          }
-         Error_abort1("Select error on UPS FD. %s\n", strerror(errno));
+         Error_abort("Select error on UPS FD. %s\n", strerror(errno));
          break;
       default:
          break;
@@ -440,7 +440,7 @@ bool ApcSmartUpsDriver::read_volatile_data()
     again:
       answer = smart_poll(_ups->UPS_Cmd[CI_STATUS]);
       Dmsg(80, "Got CI_STATUS: %s\n", answer);
-      strncpy(status, answer, sizeof(status));
+      strlcpy(status, answer, sizeof(status));
 
       /*
        * The Status command may return "SM" probably because firmware

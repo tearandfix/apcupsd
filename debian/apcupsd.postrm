@@ -13,7 +13,7 @@ stop_server ()
 {
 	set +e
 
-	if [ -x /usr/sbin/invoke-rc.d ]
+	if command -v invoke-rc.d >/dev/null 2>&1
 	then
 		invoke-rc.d apcupsd stop
 	else

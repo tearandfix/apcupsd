@@ -1,1 +1,5 @@
-platforms/debian/apcupsd.8
+debian/tmp/usr/share/man/man5/apcupsd.conf.5
+debian/tmp/usr/share/man/man8/apcaccess.8
+debian/tmp/usr/share/man/man8/apccontrol.8
+debian/tmp/usr/share/man/man8/apctest.8
+debian/tmp/usr/share/man/man8/apcupsd.8

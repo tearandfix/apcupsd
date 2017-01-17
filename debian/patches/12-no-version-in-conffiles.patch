@@ -1,0 +1,25 @@
+Index: apcupsd/platforms/apccontrol.in
+===================================================================
+--- apcupsd.orig/platforms/apccontrol.in
++++ apcupsd/platforms/apccontrol.in
+@@ -2,8 +2,6 @@
+ #
+ # Copyright (C) 1999-2002 Riccardo Facchetti <riccardo@master.oasi.gpa.it>
+ #
+-#  for apcupsd release @VERSION@ (@DATE@) - @DISTNAME@
+-#
+ # @configure_input@
+ #
+ #  Note, this is a generic file that can be used by most
+Index: apcupsd/platforms/etc/apcupsd.conf.in
+===================================================================
+--- apcupsd.orig/platforms/etc/apcupsd.conf.in
++++ apcupsd/platforms/etc/apcupsd.conf.in
+@@ -1,7 +1,5 @@
+ ## apcupsd.conf v1.1 ##
+ # 
+-#  for apcupsd release @VERSION@ (@DATE@) - @DISTNAME@
+-#
+ # "apcupsd" POSIX config file
+ 
+ #

@@ -22,46 +22,11 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
-
-#ifndef DEBUG
-void *amalloc(size_t size)
-{
-   void *buf;
-
-   buf = malloc(size);
-   if (buf == NULL)
-      Error_abort1("Out of memory: ERR=%s\n", strerror(errno));
-
-   return buf;
-}
-#endif
-
-void *arealloc(void *buf, size_t size)
-{
-   buf = realloc(buf, size);
-   if (buf == NULL)
-      Error_abort1("Out of memory: ERR=%s\n", strerror(errno));
-
-   return buf;
-}
-
-
-void *acalloc(size_t size1, size_t size2)
-{
-   void *buf;
-
-   buf = calloc(size1, size2);
-   if (buf == NULL)
-      Error_abort1("Out of memory: ERR=%s\n", strerror(errno));
-
-   return buf;
-}
-
 
 #define BIG_BUF 5000
 
@@ -92,7 +57,7 @@ int asnprintf(char *str, size_t size, const char *fmt, ...)
    va_end(arg_ptr);
 
    if (len >= BIG_BUF)
-      Error_abort0("Buffer overflow.\n");
+      Error_abort("Buffer overflow.\n");
 
    memcpy(str, buf, size);
    str[size - 1] = 0;
@@ -122,7 +87,7 @@ int avsnprintf(char *str, size_t size, const char *format, va_list ap)
 
    len = vsprintf(buf, format, ap);
    if (len >= BIG_BUF)
-      Error_abort0("Buffer overflow.\n");
+      Error_abort("Buffer overflow.\n");
 
    memcpy(str, buf, size);
    str[size - 1] = 0;
@@ -131,32 +96,6 @@ int avsnprintf(char *str, size_t size, const char *format, va_list ap)
    return len;
 #endif
 }
-
-#ifndef HAVE_LOCALTIME_R
-
-struct tm *localtime_r(const time_t *timep, struct tm *tm)
-{
-   struct tm *ltm;
-
-   static pthread_mutex_t mutex;
-   static int first = 1;
-
-   if (first) {
-      pthread_mutex_init(&mutex, NULL);
-      first = 0;
-   }
-
-   P(mutex);
-
-   ltm = localtime(timep);
-   if (ltm)
-      memcpy(tm, ltm, sizeof(struct tm));
-
-   V(mutex);
-
-   return ltm ? tm : NULL;
-}
-#endif   /* HAVE_LOCALTIME_R */
 
 /*
  * These are mutex routines that do error checking

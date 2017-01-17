@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 /*
@@ -300,8 +300,8 @@ namespace APCModbusMapping
    extern const RegInfo REG_BATTERY_VOLTAGE;
    extern const RegInfo REG_BATTERY_DATE;
    extern const RegInfo REG_BATTERY_TEMPERATURE;
-   extern const RegInfo REG_OUTPUT_0_REAL_POWER;
-   extern const RegInfo REG_OUTPUT_0_APPARENT_POWER;
+   extern const RegInfo REG_OUTPUT_0_REAL_POWER_PCT;
+   extern const RegInfo REG_OUTPUT_0_APPARENT_POWER_PCT;
    extern const RegInfo REG_OUTPUT_0_CURRENT;
    extern const RegInfo REG_OUTPUT_0_VOLTAGE;
    extern const RegInfo REG_OUTPUT_FREQUENCY;
