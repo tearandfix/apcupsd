@@ -1,0 +1,16 @@
+Description: the LOCKFILE is only used for UPSes connected via USB or serial port
+Author: Thorsten Alteholz <debian@alteholz.de>
+Index: apcupsd-3.14.14/platforms/etc/apcupsd.conf.in
+===================================================================
+--- apcupsd-3.14.14.orig/platforms/etc/apcupsd.conf.in	2017-10-04 08:31:36.000000000 +0200
++++ apcupsd-3.14.14/platforms/etc/apcupsd.conf.in	2017-10-06 09:16:21.462598444 +0200
+@@ -99,7 +99,8 @@
+ #POLLTIME 60
+ 
+ # LOCKFILE <path to lockfile>
+-#   Path for device lock file. This is the directory into which the lock file
++#   Path for device lock file for UPSes connected via USB or
++#   serial port. This is the directory into which the lock file
+ #   will be written. The directory must already exist; apcupsd will not create
+ #   it. The actual name of the lock file is computed from DEVICE.
+ #   Not used on Win32.

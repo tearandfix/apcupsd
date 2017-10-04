@@ -6,3 +6,6 @@
 10-dont-install-smtp.patch
 11-wall-on-umounted-usr.patch
 12-no-version-in-conffiles.patch
+13-spelling.patch
+14-update-conf.patch
+15-gapcmon.patch

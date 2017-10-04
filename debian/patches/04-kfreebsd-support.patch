@@ -1,3 +1,4 @@
+Description: add support for kfreebsd in configure
 diff --git a/autoconf/configure.in b/autoconf/configure.in
 index fbb3c6b..da017a0 100644
 --- a/autoconf/configure.in

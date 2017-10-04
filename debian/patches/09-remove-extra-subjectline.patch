@@ -1,3 +1,4 @@
+Description: no need for Subject:-line in email templates
 Index: apcupsd-3.14.12/platforms/etc/changeme.in
 ===================================================================
 --- apcupsd-3.14.12.orig/platforms/etc/changeme.in

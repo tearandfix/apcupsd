@@ -1,32 +1,33 @@
 Source: apcupsd
 Section: admin
 Priority: extra
-Maintainer: Giuseppe Iuculano <iuculano@debian.org>
-Build-Depends: autotools-dev,
-               debhelper (>= 9),
-               dh-autoreconf,
-               dh-systemd,
-               libgd-dev,
-               libmodbus-dev,
-               libncurses5-dev | libncurses-dev,
-               libsnmp-dev,
-               libusb-dev,
-               libwrap0-dev,
-               mawk | awk,
-               pkg-config,
-               po-debconf,
-               python-docutils,
-               python-imaging,
-               rst2pdf,
-               tcpd,
-               texinfo
-Standards-Version: 3.9.8
+Maintainer: Thorsten Alteholz <debian@alteholz.de>
+Build-Depends: debhelper (>= 10)
+	, dh-systemd
+	, libgd-dev
+	, libmodbus-dev
+	, libncurses5-dev | libncurses-dev
+	, libsnmp-dev
+	, libusb-dev
+	, libwrap0-dev
+	, mawk | awk
+	, pkg-config
+	, po-debconf
+	, python-docutils
+	, python-imaging
+	, rst2pdf
+	, tcpd
+	, texinfo
+	, libgtk2.0-dev
+	, libgconf2-dev
+Standards-Version: 4.1.0
 Homepage: http://www.apcupsd.org/
 
 Package: apcupsd
 Architecture: any
-Depends: ${misc:Depends},
-         ${shlibs:Depends}
+Depends: ${misc:Depends}
+	, ${shlibs:Depends}
+	, lsb-base
 Conflicts: ups-monitor
 Provides: ups-monitor
 Recommends: apcupsd-doc,

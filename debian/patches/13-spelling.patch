@@ -1,0 +1,50 @@
+Description: patch for spelling errors mentioned by lintian
+Author: Thorsten Alteholz <debian@alteholz.de>
+Index: apcupsd-3.14.14/doc/apcaccess.8
+===================================================================
+--- apcupsd-3.14.14.orig/doc/apcaccess.8	2016-07-16 03:04:22.000000000 +0200
++++ apcupsd-3.14.14/doc/apcaccess.8	2017-10-04 09:32:34.152275092 +0200
+@@ -282,7 +282,7 @@
+ : UPS firmware version
+ .It APCMODEL
+ : APC model information
+-.It * presence dependant on USB firmware version.
++.It * presence dependent on USB firmware version.
+ .El
+ .Ss Web/SNMP (AP9716) or PowerNet SNMP (AP9605) SmartSlot Card
+ .Bl -hang -width "xxxxxxxx"-compact
+Index: apcupsd-3.14.14/src/apcaccess.c
+===================================================================
+--- apcupsd-3.14.14.orig/src/apcaccess.c	2016-07-16 03:04:22.000000000 +0200
++++ apcupsd-3.14.14/src/apcaccess.c	2017-10-04 09:45:52.952057119 +0200
+@@ -122,7 +122,7 @@
+                        "[-p <parameter-name>] [-u] [<command>] [<host>[:<port>]]\n"
+       "\n"
+       " -f  Load default host,port from given conf file (default: %s)\n"
+-      " -h  Connect to host and port (supercedes conf file)\n"
++      " -h  Connect to host and port (supersedes conf file)\n"
+       " -p  Return only the value of the named parameter rather than all parameters and values\n"
+       " -u  Strip unit labels\n"
+       "\n"
+Index: apcupsd-3.14.14/src/gapcmon/gapcmon.c
+===================================================================
+--- apcupsd-3.14.14.orig/src/gapcmon/gapcmon.c	2017-10-06 13:49:24.000000000 +0200
++++ apcupsd-3.14.14/src/gapcmon/gapcmon.c	2017-10-06 13:50:41.200151338 +0200
+@@ -4450,7 +4450,7 @@
+       "<i>http://gapcmon.sourceforge.net/</i>\n\n"
+       "Copyright \xC2\xA9 2006 James Scott, Jr.\n"
+       "skoona@users.sourceforge.net\n\n"
+-      "Released under the GNU Public License\n"
++      "Released under the GNU General Public License\n"
+       "%s comes with\nABSOLUTELY NO WARRANTY", pch_pname);
+ 
+    /* Create About page */
+@@ -5753,7 +5753,7 @@
+ 
+    label = gtk_label_new("Selftest running\n" "Number of transfers\n"
+       "Reason last transfer\n" "Last transfer to battery\n"
+-      "Last transfer off battery\n" "Time on battery\n" "Cummulative on battery");
++      "Last transfer off battery\n" "Time on battery\n" "Cumulative on battery");
+    gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
+    gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_RIGHT);
+    gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);

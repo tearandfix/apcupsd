@@ -1,3 +1,4 @@
+Description: only prohibit logins on shutdown if login is allowed at all
 Index: apcupsd-3.14.12/src/action.c
 ===================================================================
 --- apcupsd-3.14.12.orig/src/action.c

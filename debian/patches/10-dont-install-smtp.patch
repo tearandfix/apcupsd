@@ -1,3 +1,4 @@
+Description: don't use own smtp application
 diff --git a/src/Makefile b/src/Makefile
 index 0de6d46..f007c8c 100644
 --- a/src/Makefile

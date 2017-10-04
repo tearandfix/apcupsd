@@ -1,28 +1,102 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: apcupsd
 Author: Kern Sibbald <kern@sibbald.com>
 Download: http://www.apcupsd.com/
 
 Files: *
-Copyright: (C) 2000-2009 Kern Sibbald <kern@sibbald.com>
+Copyright: 2000-2009 Kern Sibbald <kern@sibbald.com>
+           1999-2001 Riccardo Facchetti <riccardo@apcupsd.org>
+           1996-99 Andre M. Hedrick <andre@suse.com>
+           2004-2014 Adam Kropelin
 License: GPL-2+
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
- .
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
- .
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- .
- On Debian systems, the complete text of the GNU General Public License
- can be found in /usr/share/common-licenses/GPL-2 file.
+
+Files: src/gapcmon/*
+Copyright: 2006 James Scott, Jr. <skoona@users.sourceforge.net>
+License: GPL-2+
+
+Files: src/win32/compat/sys/termios.h
+Copyright: 1997, 1998, 1999, 2000, 2001, 2002, 2003 Red Hat, Inc.
+License: cygwin-license
+
 
 Files: debian/*
 Copyright: 2007-2009 Daniel Baumann <daniel@debian.org>
+           2017 Thorsten Alteholz <debian@alteholz.de>
+License: GPL-2+
+
+
+License: cygwin-license
+ Cygwin is free software.  Red Hat, Inc. licenses Cygwin to you under the
+ terms of the GNU General Public License as published by the Free Software
+ Foundation; you can redistribute it and/or modify it under the terms of
+ the GNU General Public License either version 3 of the license, or (at your
+ option) any later version (GPLv3+), along with the additional permissions
+ given below.
+ .
+ There is NO WARRANTY for this software, express or implied, including
+ the implied warranties of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program.  If not, see <http://gnu.org/licenses/>.
+ .
+ .
+ Additional Permissions:
+ .
+ .
+ 1. Linking Exception.
+ .
+ As a special exception to GPLv3+, Red Hat grants you permission to link
+ software whose sources are distributed under a license that satisfies
+ the Open Source Definition with libcygwin.a, without libcygwin.a
+ itself causing the resulting program to be covered by GPLv3+.
+ .
+ This means that you can port an Open Source application to Cygwin, and
+ distribute that executable as if it didn't include a copy of
+ libcygwin.a linked into it.  Note that this does not apply to the
+ Cygwin DLL itself.  If you distribute a (possibly modified) version of
+ the Cygwin DLL, you must adhere to the terms of GPLv3+, including the
+ requirement to provide sources for the Cygwin DLL, unless you have obtained
+ a special Cygwin license to distribute the Cygwin DLL in only its binary
+ form (see below).
+ .
+ See http://www.opensource.org/docs/osd/ for the precise Open Source
+ Definition referenced above.
+ .
+ .
+ 2.  Files Excluded from GPL Coverage.
+ .
+ Red Hat grants you permission to distribute Cygwin with the following
+ files, which are not considered part of Cygwin and are not governed by
+ GPLv3+, in source or binary form.
+ .
+ winsup	estsuite\winsup.api\msgtest.c
+ winsup	estsuite\winsup.api\semtest.c
+ winsup	estsuite\winsup.api\shmtest.c
+ .
+ Red Hat grants you permission to link or combine code in Cygwin with
+ code in or corresponding to the following files, which are not
+ considered part of Cygwin and are not governed by GPLv3+, and to
+ distribute such combinations under terms of your choice, provided that
+ such terms are otherwise consistent with the application of GPLv3+ to
+ Cygwin itself.  You must comply with GPLv3+ with respect to all
+ portions of such combinations other than those that correspond to or
+ are derived from such non-Cygwin code but which do not correspond to
+ or are not derived from Cygwin itself.
+ .
+ winsup\cygserver\sysv_shm.cc
+ .
+ .
+ 3.  Alternative License. 
+ .
+ Red Hat sells a special Cygwin License for customers who are unable to
+ provide their application in open source code form.  For more
+ information, please see: http://www.redhat.com/software/cygwin/, or call
+ +1-866-2REDHAT ext. 45300 (toll-free in the US).
+ .
+ Outside the US call your regional Red Hat office, see
+ http://www.redhat.com/about/contact/ww/
+ 
 License: GPL-2+
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License

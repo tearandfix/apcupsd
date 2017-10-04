@@ -1,3 +1,4 @@
+Description: avoid version and date in conffiles (-> #322970)
 Index: apcupsd/platforms/apccontrol.in
 ===================================================================
 --- apcupsd.orig/platforms/apccontrol.in

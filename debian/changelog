@@ -1,3 +1,20 @@
+apcupsd (3.14.14-1) unstable; urgency=medium
+
+  * new maintainer (Closes: #866835)
+  * debian/control: bump standard to 4.1.0 (no changes)
+  * debian/control: use dh10
+  * debian/control: remove useless dependency on dh-autoreconf 
+                    and autotools-dev
+  * debian/control: add dependency on lsb-base to apcupsd
+  * debian/apcupsd.servive: wait for network.online (Closes: #865620)
+  * debian/rules: build with --enable-gapcmon
+                  new dependencies: libgtk2.0-dev, libgconf2-dev
+  * add 14-update-conf.patch (Closes: #849404)
+    clarification for LOCKFILE usage in apcupsd.conf
+  * debian/copyright: update
+
+ -- Thorsten Alteholz <debian@alteholz.de>  Wed, 04 Oct 2017 19:00:03 +0200
+
 apcupsd (3.14.14-0.3) unstable; urgency=medium
 
   * Non-maintainer upload.

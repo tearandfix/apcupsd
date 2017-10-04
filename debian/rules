@@ -8,7 +8,8 @@ include /usr/share/dpkg/buildflags.mk
 export VERBOSE=1
 
 %:
-	dh $@ --with autoreconf,autotools_dev,systemd
+	# don't use --with autotools_dev with dh10 anymore: dh $@ --with autoreconf,autotools_dev,systemd
+	dh $@ --with autoreconf,systemd
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
@@ -19,6 +20,7 @@ override_dh_auto_configure:
 		--enable-net \
 		--enable-snmp \
 		--enable-test \
+		--enable-gapcmon \
 		--sysconfdir=/etc/apcupsd \
 		--with-cgi-bin=\$${prefix}/lib/cgi-bin/apcupsd \
 		--with-pid-dir=/var/run \
