@@ -20,7 +20,10 @@
 
 case "$1" in
 	poweroff | killpower)
-		if [ -f /etc/apcupsd/powerfail ]; then
+		faildir=$(grep -e^PWRFAILDIR /etc/apcupsd/apcupsd.conf)
+		faildir="${faildir#PWRFAILDIR }"
+
+		if [ -f "${faildir:=/etc/apcupsd}/powerfail" ]; then
 			echo ""
 			echo -n "apcupsd: Ordering UPS to kill power... "
 			/etc/apcupsd/apccontrol killpower

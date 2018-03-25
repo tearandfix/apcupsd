@@ -12,4 +12,4 @@ etc/apcupsd/multimon.conf
 etc/apcupsd/offbattery
 etc/apcupsd/onbattery
 sbin
-usr/bin
+#usr/bin

@@ -1,5 +1,9 @@
 #!/bin/sh
-rm -f /etc/apcupsd/powerfail
+
+faildir=$(grep -e^PWRFAILDIR /etc/apcupsd/apcupsd.conf)
+faildir="${faildir#PWRFAILDIR }"
+
+rm -f "${faildir:=/etc/apcupsd}/powerfail"
 if grep -sq 'POWER FAILURE' /etc/nologin; then
 	rm -f /etc/nologin
 fi

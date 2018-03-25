@@ -1,9 +1,32 @@
+apcupsd (3.14.14-2) unstable; urgency=medium
+
+  * debian/control: bump standard to 4.1.4 (no changes)
+  * debian/control: use dh11 (mostly)
+  * debian/control: add salsa VCS URLs
+  * debian/control: remove dependency for dh-systemd
+  * debian/control: use prio optional
+  * debian/control: remove dependency for python-imaging (Closes: #892950)
+                    (dependency does not seem to be needed anymore)
+  * debian/local/*: replace /etc/apcupsd/powerfail by file created
+                    with PWRFAILDIR from config
+                    (Closes: #541660, #572727, #576703)
+  * debian/copyright: use https in URL
+  * debian/control: drop dependency on libgconf2-dev (Closes: #885820)
+  * debian/control: drop dependency on libgtk2.0-dev again
+  * debian/rules: do not build with --enable-gapcmon
+                  Unfortunately gconf2 shall be removed from Debian.
+                  Upstream needs to move from gconf to gsettings.
+                  As long as this did not happen, we can not build
+                  the frontend any longer. (Closes: #889670, #878209)
+
+ -- Thorsten Alteholz <debian@alteholz.de>  Sun, 25 Mar 2018 19:14:07 +0100
+
 apcupsd (3.14.14-1) unstable; urgency=medium
 
   * new maintainer (Closes: #866835)
   * debian/control: bump standard to 4.1.0 (no changes)
   * debian/control: use dh10
-  * debian/control: remove useless dependency on dh-autoreconf 
+  * debian/control: remove useless dependency on dh-autoreconf
                     and autotools-dev
   * debian/control: add dependency on lsb-base to apcupsd
   * debian/apcupsd.servive: wait for network.online (Closes: #865620)
