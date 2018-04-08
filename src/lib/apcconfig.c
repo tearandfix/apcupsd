@@ -21,8 +21,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -108,7 +108,6 @@ static const GENINFO types[] = {
    { "net",      "NETWORK UPS Driver",  NETWORK_UPS },
    { "test",     "TEST UPS Driver",     TEST_UPS },
    { "pcnet",    "PCNET UPS Driver",    PCNET_UPS },
-   { "netsnmp",  "NET-SNMP UPS Driver", SNMP_UPS },
    { "modbus",   "MODBUS UPS Driver",   MODBUS_UPS },
    { NULL,       "*invalid-ups-type*",  NO_UPS },
 };
@@ -215,65 +214,6 @@ static int obsolete(UPSINFO *ups, int offset, const GENINFO * junk, const char *
    return FAILURE;
 }
 
-#ifdef UNSUPPORTED_CODE
-static int start_ups(UPSINFO *ups, int offset, const GENINFO * size, const char *v)
-{
-   char x[MAXSTRING];
-
-   if (!sscanf(v, "%s", x))
-      return FAILURE;
-
-   /* Verify that we don't already have an UPS with the same name. */
-   for (ups = NULL; (ups = getNextUps(ups)) != NULL;)
-      if (strncmp(x, ups->upsname, UPSNAMELEN) == 0) {
-         fprintf(stderr, "%s: duplicate upsname [%s] in config file.\n",
-            argvalue, ups->upsname);
-         return FAILURE;
-      }
-
-   /* Here start the definition of a new UPS to add to the linked list. */
-   ups = new_ups();
-
-   if (ups == NULL) {
-      Error_abort1("%s: not enough memory.\n", argvalue);
-      return FAILURE;
-   }
-
-   init_ups_struct(ups);
-
-
-   strlcpy((char *)AT(ups, offset), x, (int)size);
-
-   /* Terminate string */
-   *((char *)AT(ups, (offset + (int)size) - 1)) = 0;
-   return SUCCESS;
-}
-
-static int end_ups(UPSINFO *ups, int offset, const GENINFO * size, const char *v)
-{
-   char x[MAXSTRING];
-
-   if (!sscanf(v, "%s", x))
-      return FAILURE;
-
-   if (ups == NULL) {
-      fprintf(stderr, "%s: upsname [%s] mismatch in config file.\n", argvalue, x);
-      return FAILURE;
-   }
-
-   if (strncmp(x, ups->upsname, UPSNAMELEN) != 0) {
-      fprintf(stderr, "%s: upsname [%s] mismatch in config file.\n",
-         argvalue, ups->upsname);
-      return FAILURE;
-   }
-
-   insertUps(ups);
-
-   return SUCCESS;
-}
-#endif
-
-
 static int match_int(UPSINFO *ups, int offset, const GENINFO * junk, const char *v)
 {
    int x;
@@ -292,7 +232,7 @@ static int match_range(UPSINFO *ups, int offset, const GENINFO * vs, const char 
 
    if (!vs) {
       /* Shouldn't ever happen so abort if it ever does. */
-      Error_abort1("%s: Bogus configuration table! Fix and recompile.\n",
+      Error_abort("%s: Bogus configuration table! Fix and recompile.\n",
          argvalue);
    }
 
@@ -341,7 +281,7 @@ static int match_index(UPSINFO *ups, int offset, const GENINFO * vs, const char 
 
    if (!vs) {
       /* Shouldn't ever happen so abort if it ever does. */
-      Error_abort1("%s: Bogus configuration table! Fix and recompile.\n",
+      Error_abort("%s: Bogus configuration table! Fix and recompile.\n",
          argvalue);
    }
 
@@ -666,9 +606,11 @@ void check_for_config(UPSINFO *ups, char *cfgfile)
    char line[MAXSTRING];
    int errors = 0;
    int erpos = 0;
+   int fd;
 
-   if ((apcconf = fopen(cfgfile, "r")) == NULL) {
-      Error_abort2("Error opening configuration file (%s): %s\n",
+   if ((fd = open(cfgfile, O_RDONLY|O_CLOEXEC)) == -1 ||
+       (apcconf = fdopen(fd, "r")) == NULL) {
+      Error_abort("Error opening configuration file (%s): %s\n",
          cfgfile, strerror(errno));
    }
    strlcpy(ups->configfile, cfgfile, sizeof(ups->configfile));
@@ -727,7 +669,7 @@ jump_into_the_loop:
        * attempted
        */
       ups->lockpath[0] = '\0';
-      error_exit("Terminating due to configuration file errors.\n");
+      Error_abort("Terminating due to configuration file errors.\n");
    }
 
    /* post-process the configuration stored in the ups structure */
@@ -747,28 +689,32 @@ jump_into_the_loop:
 
    // Sanitize cable type & UPS mode. Since UPSTYPE (aka mode) and UPSCABLE
    // can contradict eachother, the rule is that UPSTYPE wins. In all cases
-   // except Dumb we can determine cable type from mode so we ignore user's 
-   // configured UPSCABLE and force it ourselves. In the case of Dumb UPSes we 
-   // just ensure they picked a simple cable type.
+   // except Dumb and MODBUS we can determine cable type from mode so we ignore 
+   // user's configured UPSCABLE and force it ourselves. In the case of Dumb 
+   // UPSes we just ensure they picked a simple cable type and for MODBUS we
+   // ensure they picked a smart (or USB) cable type.
    switch (ups->mode.type)
    {
    case USB_UPS:
       match_range(ups, WHERE(cable), cables, "usb");
       break;
    case SNMPLITE_UPS:
-   case SNMP_UPS: 
    case PCNET_UPS:
    case NETWORK_UPS:
       match_range(ups, WHERE(cable), cables, "ether");
       break;
    case MODBUS_UPS:
+      // Abort if user specified MODBUS UPS type with dumb cable
+      if (ups->cable.type < CABLE_SMART)
+         Error_abort("Invalid cable specified for MODBUS UPS\n");
+       break;
    case APCSMART_UPS:
       match_range(ups, WHERE(cable), cables, "smart");
       break;
    case DUMB_UPS:
       // Abort if user specified dumb UPS type with smart cable
       if (ups->cable.type >= CABLE_SMART)
-         Error_abort0("Invalid cable specified for Dumb UPS\n");
+         Error_abort("Invalid cable specified for Dumb UPS\n");
       break;      
    case TEST_UPS:
       // Allow anything in test mode

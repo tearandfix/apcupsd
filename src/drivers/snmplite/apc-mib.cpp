@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -83,6 +83,18 @@ static struct CiOidMap CiOidMap[] =
 #define TIMETICKS_TO_SECS 100
 #define SECS_TO_MINS      60
 
+// Seen in the field: ITEMP OID occasionally sent by UPS is bogus. Value
+// appears to come from CI_RUNTIM OID. Confirmed via Wireshark that error is on 
+// UPS Web/SNMP card side. As a workaround in apcupsd we will filter out 
+// obviously bogus ITEMPs.
+//
+// Issue was observed on:
+//    UPS: Smart-UPS RT 5000 XL
+//    SNMP module:
+//     MN:AP9619 HR:A10 MD:07/12/2007
+//     MB:v3.8.6 PF:v3.5.5 PN:apc_hw02_aos_355.bin AF1:v3.5.5 AN1:apc_hw02_sumx_355.bin
+#define MAX_SANE_ITEMP    200
+
 static void apc_update_ci(UPSINFO *ups, int ci, Snmp::Variable &data)
 {
    static unsigned int alarmtimer = 0;
@@ -116,7 +128,10 @@ static void apc_update_ci(UPSINFO *ups, int ci, Snmp::Variable &data)
 
    case CI_ITEMP:
       Dmsg(80, "Got CI_ITEMP: %d\n", data.u32);
-      ups->UPSTemp = data.u32;
+      if (data.u32 <= MAX_SANE_ITEMP)
+         ups->UPSTemp = data.u32;
+      else
+         Dmsg(10, "Ignoring out-of-range ITEMP: %d\n", data.u32);
       break;
 
    case CI_ATEMP:

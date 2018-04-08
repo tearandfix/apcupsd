@@ -24,8 +24,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #ifndef _LINUXUSB_H
@@ -76,6 +76,7 @@ private:
 
    void reinitialize_private_structure();
    int open_device(const char *dev);
+   void bind_upses();
    bool open_usb_device();
    bool usb_link_check();
    bool populate_uval(USB_INFO *info, USB_VALUE *uval);

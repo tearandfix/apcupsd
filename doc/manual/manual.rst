@@ -14,7 +14,7 @@ computer in the event of a power failure.**
 
 | |date| |time|
 | This manual documents apcupsd version 3.14.x
-| Copyright |(C)| 2004-2014 Adam Kropelin
+| Copyright |(C)| 2004-2015 Adam Kropelin
 | Copyright |(C)| 1999-2005 Kern Sibbald
 
 *Copying and distribution of this file, with or without modification, 
@@ -285,9 +285,8 @@ pcnet
     and potentially more secure than SNMP.
 
 modbus
-    MODBUS is the newest APC protocol and operates over RS232 links. (It is
-    also capable of operating over USB, but apcupsd does not support this yet.)
-    MODBUS is APC's replacement for the aging 'apcsmart' (aka UPS-Link) 
+    MODBUS is the newest APC protocol and operates over RS232 serial links or 
+    USB. MODBUS is APC's replacement for the aging 'apcsmart' (aka UPS-Link) 
     protocol. MODBUS is the only way to access detailed control and status 
     information on newer (esp. SMT series) UPSes.
 
@@ -1289,15 +1288,13 @@ to customize your installation.
     SNMP driver. This driver accesses the UPS over the network using
     SNMP. This is compatible only with UPSes equipped with an SNMP or
     Web/SNMP management card. By default this is enabled.
---enable-net-snmp  Turns on generation of the
-    obsolete NET-SNMP driver. This driver was the precursor to the current
-    snmp driver and is now obsolete. It is available as a fallback if the new
-    driver cannot be used for some reason. By default this is disabled.
 --enable-pcnet  Turns on generation of the
     PCNET (PowerChute Network Shutdown) driver. This driver accesses
     the UPS over the network using APC's custom protocol. This driver
     can be used as an alternative to SNMP for UPSes equipped with a
     modern Web/SNMP management card.
+--enable-modbus  Turns on generation of the MODBUS/RS232 driver (default)
+--enable-modbus-usb  Turns on generation of the MODBUS/USB driver
 --enable-test  This turns on a test driver
     that is used only for debugging. By default it is disabled.
 --enable-gapcmon  This option enables building the GTK GUI front-end for 
@@ -2151,10 +2148,10 @@ distro, you can use commands such as...
 MODBUS Driver
 -------------
 
+MODBUS is APC's replacement for the aging 'apcsmart' (aka UPS-Link) 
+protocol. It is recommended for modern (ex: SMT series) Smart-UPS models.
 As of 3.14.11, apcupsd supports the MODBUS protocol over RS232 serial
-interfaces. MODBUS is APC's replacement for the aging 'apcsmart' (aka UPS-Link) 
-protocol. It is recommended for modern (ex: SMT series) Smart-UPS where an
-RS232 connection is available.
+interfaces. As of 3.14.13, apcupsd supports the MODBUS protocol over USB.
 
 Not all APC UPSes support MODBUS. New 2013 year Smart-UPS models are likely to 
 support it out-of-the-box and firmware updates are available for some older 
@@ -2163,25 +2160,44 @@ if a certain model will support MODBUS. That said, APC knowledge base article
 FA164737 indicates MODBUS support is available for the majority of the SMC,
 SMT, and SMX model lines.
 
-The required apcupsd.conf settings for MODBUS are straightforward:
+The required apcupsd.conf settings for MODBUS are straightforward.
 
-::
+For MODBUS serial RS232:
 
-    ## apcupsd.conf v1.1 ##
-    UPSCABLE smart
-    UPSTYPE modbus
-    DEVICE /dev/ttyS0
-    LOCKFILE /var/lock
-    UPSCLASS standalone
-    UPSMODE disable
+    ::
 
-The ``DEVICE`` setting identifies the serial port to which the UPS is connected.
-This can take the form of ``COM1``, etc. on Windows or ``/dev/XXX`` on UNIX
-systems.
+        ## apcupsd.conf v1.1 ##
+        UPSCABLE smart
+        UPSTYPE modbus
+        DEVICE /dev/ttyS0
+        LOCKFILE /var/lock
+        UPSCLASS standalone
+        UPSMODE disable
+    
+    The ``DEVICE`` setting identifies the serial port to which the UPS is connected.
+    This can take the form of ``COM1``, etc. on Windows or ``/dev/XXX`` on UNIX
+    systems.
+    
+    You should use the APC-supplied serial cable (P/N 940-0625A) that ships with 
+    the UPS. Other 'smart' type cables may work, but only 940-0625A has been 
+    formally tested at this time.
 
-You should use the APC-supplied serial cable (P/N 940-0625A) that ships with 
-the UPS. Other 'smart' type cables may work, but only 940-0625A has been 
-formally tested at this time.
+For MODBUS USB:
+
+    ::
+  
+        ## apcupsd.conf v1.1 ##
+        UPSCABLE usb
+        UPSTYPE modbus
+        DEVICE
+        LOCKFILE /var/lock
+        UPSCLASS standalone
+        UPSMODE disable
+  
+    The ``DEVICE`` setting can be left blank or, optionally, set to the serial
+    number of the UPS. If ``DEVICE`` is blank, apcupsd will attach to the first
+    APC UPS it finds, otherwise it will attach to the specific UPS identified by
+    the serial number.
 
 Note that *most UPSes ship with MODBUS support disabled by default*. You must 
 use the UPS's front panel menu to enable MODBUS protocol support before apcupsd 
@@ -2593,16 +2609,16 @@ apctest
 -------
 
 ``apctest`` is a program that allows you to talk
-directly to your UPS and run certain low-level tests, display all
-know values from the UPS's EEPROM, perform a battery runtime
-calibration, program the EEPROM (serial connection only), and enter
-in TTY mode with the UPS. Here we describe how to use it for a SmartUPS.
-The menus and options for USB and simple signaling UPSes are different
+directly to your UPS and run certain low-level tests, adjust various settings
+such as the battery installation date and alarm behavior, and perform a
+battery runtime calibration. Here we describe how to use it for a SmartUPS
+utilizing the apcsmart driver and RS232 serial connection.
+The menus and options for USB, MODBUS, and simple signaling UPSes are different
 but mostly self-explanatory.
 
-Shutdown apcupsd if it is running. Make sure your
-``/etc/apcupsd/apcupsd.conf`` file has ``UPSTYPE apcsmart`` and 
-``UPSCABLE`` has one of the smart cables that are supported.
+*Shutdown apcupsd if it is running.* This is important. Only one program can
+communicate with the UPS at a time and if apcupsd is running, apctest will fail
+to contact the UPS.
 
 Run apctest by invoking it with no arguments.
 
@@ -4839,6 +4855,9 @@ behavior of the apcupsd daemon. For most installations it is only
 necessary to set a handful of general directives. The rest can be
 left at their defaults unless you have an exotic configuration.
 
+Note that the apcupsd daemon must be restarted in order for changes to
+the configuration file to become active.
+
 General Configuration Directives
 --------------------------------
 
@@ -6019,7 +6038,7 @@ Contributors
 ------------
 
 **Current Code Maintainer and Project Manager**
-    Adam Kropelin (akropel1@rochester.rr.com)
+    Adam Kropelin (adam@kroptech.com)
 
 **RPM Packager**
     D\. Scott Barninger
@@ -6069,6 +6088,65 @@ Contributors
 **WEB Interfaces**
     Kern Sibbald (kern@sibbald.com)
     Joseph Acosta (joeja@mindspring.com)
+
+
+Apcupsd License
+---------------
+
+Apcupsd is licensed under the terms of the GNU General Public License, version 2
+(GPLv2). The full text of this license may be found in the COPYING file at the 
+top of the source tree and online at http://www.gnu.org/licenses/gpl-2.0.html.
+
+Source files are copyright of their specific author(s), as noted in the files.
+
+::
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of version 2 of the GNU General
+   Public License as published by the Free Software Foundation.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public
+   License along with this program; if not, write to the Free
+   Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1335, USA.
+
+
+Other Open Source Licenses
+--------------------------
+
+Apcupsd incorporates the libusbhid library which is subject to the following
+copyright and license:
+
+::
+
+   Copyright (c) 1999 Lennart Augustsson <augustss@netbsd.org>
+   All rights reserved.
+   
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   
+   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
 
 
 .. |image4| image:: ./commlost.png

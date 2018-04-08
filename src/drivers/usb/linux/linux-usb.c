@@ -24,8 +24,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 /*
@@ -35,8 +35,9 @@
 #define HID_MAX_USAGES 1024
 
 #include "apc.h"
-#include "../usb_common.h"
 #include "linux-usb.h"
+#include <glob.h>
+#include <linux/usbdevice_fs.h>
 
 /* RHEL has an out-of-date hiddev.h */
 #ifndef HIDIOCGFLAG
@@ -93,7 +94,7 @@ int LinuxUsbUpsDriver::open_device(const char *dev)
    Dmsg(200, "Attempting to open \"%s\"\n", dev);
 
    /* Open the device port */
-   fd = open(dev, O_RDWR | O_NOCTTY);
+   fd = open(dev, O_RDWR | O_NOCTTY | O_CLOEXEC);
    if (fd >= 0) {
       /* Check for the UPS application HID usage */
       for (i = 0; (ret = ioctl(fd, HIDIOCAPPLICATION, i)) > 0; i++) {
@@ -117,6 +118,80 @@ int LinuxUsbUpsDriver::open_device(const char *dev)
 }
 
 /*
+ * Routine to request that kernel driver attach to any APC USB UPSes
+ */
+void LinuxUsbUpsDriver::bind_upses()
+{
+#ifdef USBDEVFS_CONNECT
+   // Find all USB devices in usbfs
+   glob_t g;
+   if (glob("/proc/bus/usb/[0-9][0-9][0-9]/[0-9][0-9][0-9]", 0, NULL, &g) &&
+      glob("/dev/bus/usb/[0-9][0-9][0-9]/[0-9][0-9][0-9]", 0, NULL, &g))
+   {
+      return;
+   }
+
+   // Iterate over all USB devices...
+   for (size_t i = 0; i < g.gl_pathc; ++i)
+   {
+      // Open the device in usbfs
+      int fd = open(g.gl_pathv[i], O_RDWR|O_CLOEXEC);
+      if (fd == -1)
+         continue;
+
+      struct usb_device_descriptor
+      {
+         uint8_t  bLength;
+         uint8_t  bDescriptorType;
+         uint16_t bcdUSB;
+         uint8_t  bDeviceClass;
+         uint8_t  bDeviceSubClass;
+         uint8_t  bDeviceProtocol;
+         uint8_t  bMaxPacketSize0;
+         uint16_t idVendor;
+         uint16_t idProduct;
+         uint16_t bcdDevice;
+         uint8_t  iManufacturer;
+         uint8_t  iProduct;
+         uint8_t  iSerialNumber;
+         uint8_t  bNumConfigurations;
+      } __attribute__ ((packed)) dd;
+
+      // Fetch device descriptor, then verify device VID/PID are supported and
+      // no kernel driver is currently attached
+      struct usbdevfs_getdriver getdrv = {0};
+      if (read(fd, &dd, sizeof(dd)) == sizeof(dd) && 
+          MatchVidPid(dd.idVendor, dd.idProduct) &&
+          ioctl(fd, USBDEVFS_GETDRIVER, &getdrv))
+      {
+         // APC device with no kernel driver attached
+         // Issue command to attach kernel driver
+         struct usbdevfs_ioctl command = {0};
+         command.ioctl_code = USBDEVFS_CONNECT;
+         int rc = ioctl(fd, USBDEVFS_IOCTL, &command);
+         // Hard to tell if this succeeded because the return value of the
+         // ioctl was changed. In linux 2.4.37, 0 means success but in 3.4 it
+         // means failure. So...we're screwed. The only thing we know for sure
+         // is <0 is definitely failure.
+         if (rc >= 0)
+         {
+            Dmsg(100, "Reattached kernel driver to %s\n", g.gl_pathv[i]);
+         }
+         else
+         {
+            Dmsg(0, "Failed to attach kernel driver to %s (%d)\n", 
+               g.gl_pathv[i], rc);
+         }
+      }
+
+      close(fd);
+   }
+
+   globfree(&g);
+#endif // USBDEVFS_CONNECT
+}
+
+/*
  * Internal routine to open the device and ensure that there is
  * a UPS application on the line.  This routine may be called
  * many times because the device may be unplugged and plugged
@@ -128,6 +203,13 @@ bool LinuxUsbUpsDriver::open_usb_device()
    const char *hiddev[] =
       { "/dev/usb/hiddev", "/dev/usb/hid/hiddev", "/dev/hiddev", NULL };
    int i, j, k;
+
+   /*
+    * Ensure any APC UPSes are utilizing the usbhid/hiddev kernel driver.
+    * This is necessary if they were detached from the kernel driver in order
+    * to use libusb (the apcupsd 'generic' USB driver).
+    */
+   bind_upses();
 
    /*
     * Note, we set _ups->fd here so the "core" of apcupsd doesn't
@@ -585,7 +667,7 @@ bool LinuxUsbUpsDriver::pusb_ups_get_capabilities()
    unsigned int i, j, k, n;
 
    if (ioctl(_fd, HIDIOCINITREPORT, 0) < 0)
-      Error_abort1("Cannot init USB HID report. ERR=%s\n", strerror(errno));
+      Error_abort("Cannot init USB HID report. ERR=%s\n", strerror(errno));
 
    write_lock(_ups);
 
@@ -617,7 +699,8 @@ bool LinuxUsbUpsDriver::pusb_ups_get_capabilities()
                if (ioctl(_fd, HIDIOCGUCODE, &uref) < 0)
                   continue;
 
-               ioctl(_fd, HIDIOCGUSAGE, &uref);
+               if (ioctl(_fd, HIDIOCGUSAGE, &uref) < 0)
+                  continue;
 
                /*
                 * We've got a UPS usage entry, now walk down our
@@ -644,7 +727,7 @@ bool LinuxUsbUpsDriver::pusb_ups_get_capabilities()
 
                         if (!info) {
                            write_unlock(_ups);
-                           Error_abort0("Out of memory.\n");
+                           Error_abort("Out of memory.\n");
                         }
 
                         _info[ci] = info;

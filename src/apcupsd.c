@@ -18,52 +18,12 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- */
-
-/* The big overall flow of apcupsd is as follows
- *
- * Assuming no networking features are turned on.
- *
- * Main Process:
- *   process configuration file
- *   establish contact with the UPS
- *   read the state of the UPS
- *   Fork to become a daemon
- *   write the shared memory
- *   start child process apcdev -- subroutine do_device()
- *   start child process apcnis, if configured -- subroutine do_server()
- *   wait for child processes to complete
- *   exit
- *
- * Child process apcdev -- subroutine do_device()
- *   wait for activity on serial port or timeout 
- *        from select() (5 seconds) -- check_serial()
- *   call do_action()
- *        read and lock the shared memory
- *        check to see if UPS state has changed and if we should take any action. I.e.
- *              are we on batteries, should we shutdown, ...
- *        write and unlock shared memory
- *   call fillUPS()
- *        read and lock shared memory
- *        Poll the UPS for each state variable
- *        enable the UPS
- *        enable the UPS again
- *        write and unlock shared memory
- *   call do_reports()
- *        if DATA report time expired, write DATA report -- log_data()
- *        if STATUS report time expired, write STATUS report
- *   loop
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
 
-/*
- * myUPS is a structure that need to be defined in _all_ the forked processes.
- * The syncronization of data into this structure is done with the shared
- * memory area so this is made reentrant by the shm mechanics.
- */
 UPSINFO *core_ups = NULL;
 
 static void daemon_start(void);
@@ -96,7 +56,7 @@ void apcupsd_terminate(int sig)
    delete_lockfile(ups);
    if (pidcreated)
       unlink(pidfile);
-   log_event(ups, LOG_WARNING, "apcupsd shutdown succeeded");
+   log_event(ups, LOG_NOTICE, "apcupsd shutdown succeeded");
    destroy_ups(ups);
    closelog();
    _exit(0);
@@ -122,37 +82,16 @@ void apcupsd_error_cleanup(UPSINFO *ups)
  * and exits. It is normally called from the Error_abort
  * define, which inserts the file and line number.
  */
-void apcupsd_error_out(const char *file, int line, const char *fmt, ...)
+void apcupsd_error_out(const char *file, int line, const char *fmt, va_list arg_ptr)
 {
    char buf[256];
-   va_list arg_ptr;
    int i;
 
    asnprintf(buf, sizeof(buf),
       "apcupsd FATAL ERROR in %s at line %d\n", file, line);
 
    i = strlen(buf);
-   va_start(arg_ptr, fmt);
    avsnprintf((char *)&buf[i], sizeof(buf) - i, (char *)fmt, arg_ptr);
-   va_end(arg_ptr);
-
-   fprintf(stderr, "%s", buf);
-   log_event(core_ups, LOG_ERR, "%s", buf);
-   apcupsd_error_cleanup(core_ups);     /* finish the work */
-}
-
-/*
- * Subroutine error_exit simply prints the supplied error
- * message, cleans up, and exits.
- */
-void apcupsd_error_exit(const char *fmt, ...)
-{
-   char buf[256];
-   va_list arg_ptr;
-
-   va_start(arg_ptr, fmt);
-   avsnprintf(buf, sizeof(buf), (char *)fmt, arg_ptr);
-   va_end(arg_ptr);
 
    fprintf(stderr, "%s", buf);
    log_event(core_ups, LOG_ERR, "%s", buf);
@@ -177,7 +116,6 @@ int main(int argc, char *argv[])
 
    /* Set specific error_* handlers. */
    error_out = apcupsd_error_out;
-   error_exit = apcupsd_error_exit;
 
    /*
     * Default config file. If we set a config file in startup switches, it
@@ -193,7 +131,7 @@ int main(int argc, char *argv[])
    tmp_fd = open("/dev/null", O_RDONLY);
    if (tmp_fd > 2) {
       close(tmp_fd);
-   } else {
+   } else if (tmp_fd >= 0) {
       for (i = 1; tmp_fd + i <= 2; i++)
          dup2(tmp_fd, tmp_fd + i);
    }
@@ -206,7 +144,7 @@ int main(int argc, char *argv[])
 
    ups = new_ups();                /* get new ups */
    if (!ups)
-      Error_abort1("%s: init_ipc failed.\n", argv[0]);
+      Error_abort("%s: init_ipc failed.\n", argv[0]);
 
    init_ups_struct(ups);
    core_ups = ups;                 /* this is our core ups structure */
@@ -234,7 +172,7 @@ int main(int argc, char *argv[])
 
 #ifndef DEBUG
    if ((getuid() != 0) && (geteuid() != 0))
-      Error_abort0("Needs super user privileges to run.\n");
+      Error_abort("Needs super user privileges to run.\n");
 #endif
 
    check_for_config(ups, cfgfile);
@@ -255,7 +193,7 @@ int main(int argc, char *argv[])
    /* Attach the correct driver. */
    attach_driver(ups);
    if (ups->driver == NULL)
-      Error_abort0("Apcupsd cannot continue without a valid driver.\n");
+      Error_abort("Apcupsd cannot continue without a valid driver.\n");
 
    ups->start_time = time(NULL);
 
@@ -270,7 +208,7 @@ int main(int argc, char *argv[])
 
    /* Create temp events file if we are not doing a hibernate or shutdown */
    if (!hibernate_ups && !shutdown_ups && ups->eventfile[0] != 0) {
-      ups->event_fd = open(ups->eventfile, O_RDWR | O_CREAT | O_APPEND, 0644);
+      ups->event_fd = open(ups->eventfile, O_RDWR | O_CREAT | O_APPEND | O_CLOEXEC, 0644);
       if (ups->event_fd < 0) {
          log_event(ups, LOG_WARNING, "Could not open events file %s: %s\n",
             ups->eventfile, strerror(errno));
@@ -278,7 +216,7 @@ int main(int argc, char *argv[])
    }
 
    if (create_lockfile(ups) == LCKERROR) {
-      Error_abort0("Unable to create UPS lock file.\n"
+      Error_abort("Unable to create UPS lock file.\n"
                    "  If apcupsd or apctest is already running,\n"
                    "  please stop it and run this program again.\n");
    }
@@ -291,7 +229,7 @@ int main(int argc, char *argv[])
       // If we're hibernating or shutting down the UPS, setup is a one-shot.
       // If it fails, we're toast; no retries
       if (!setup_device(ups))
-         Error_abort0("Unable to open UPS device for hibernate or shutdown");
+         Error_abort("Unable to open UPS device for hibernate or shutdown");
 
       if (hibernate_ups)
          initiate_hibernate(ups);
@@ -303,7 +241,7 @@ int main(int argc, char *argv[])
 
    /*
     * From now ... we must _only_ start up threads!
-    * No more unchecked writes to myUPS because the threads must rely
+    * No more unchecked writes to UPSINFO because the threads must rely
     * on write locks and up to date data in the shared structure.
     */
 
@@ -313,7 +251,7 @@ int main(int argc, char *argv[])
       Dmsg(10, "NIS thread started.\n");
    }
 
-   log_event(ups, LOG_WARNING,
+   log_event(ups, LOG_NOTICE,
       "apcupsd " APCUPSD_RELEASE " (" ADATE ") " APCUPSD_HOST " startup succeeded");
 
    /* main processing loop */
@@ -331,14 +269,14 @@ extern int debug_level;
  */
 static void daemon_start(void)
 {
-#if !defined(HAVE_WIN32)
+#if !defined(HAVE_MINGW)
    int i, fd;
    pid_t cpid;
    mode_t oldmask;
 
 #ifndef HAVE_QNX_OS
    if ((cpid = fork()) < 0)
-      Error_abort0("Cannot fork to become daemon\n");
+      Error_abort("Cannot fork to become daemon\n");
    else if (cpid > 0)
       exit(0);                     /* parent exits */
 
@@ -350,7 +288,7 @@ static void daemon_start(void)
                                     | PROCMGR_DAEMON_NODEVNULL
                                     | PROCMGR_DAEMON_KEEPUMASK) == -1)
    {
-      Error_abort0("Couldn't become daemon\n");
+      Error_abort("Couldn't become daemon\n");
    }
 #endif   /* HAVE_QNX_OS */
 
@@ -397,9 +335,9 @@ static void daemon_start(void)
    fd = open("/dev/null", O_RDONLY);
    if (fd > 2) {
       close(fd);
-   } else {
+   } else if (fd >= 0) {
       for (i = 1; fd + i <= 2; i++)
          dup2(fd, fd + i);
    }
-#endif   /* HAVE_WIN32 */
+#endif   /* HAVE_MINGW */
 }

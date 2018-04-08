@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -98,7 +98,8 @@ PcnetUpsDriver::PcnetUpsDriver(UPSINFO *ups) :
    _uptime(0),
    _reboots(0),
    _datatime(0),
-   _runtimeInSeconds(false)
+   _runtimeInSeconds(false),
+   _fd(INVALID_SOCKET)
 {
    memset(_device, 0, sizeof(_device));
 }
@@ -345,14 +346,14 @@ bool PcnetUpsDriver::pcnet_process_data(const char *key, const char *value)
 char *PcnetUpsDriver::digest2ascii(md5_byte_t *digest)
 {
    static char ascii[33];
-   char *ptr;
+   char byte[3];
    int idx;
 
    /* Convert binary digest to ascii */
-   ptr = ascii;
+   ascii[0] = '\0';
    for (idx=0; idx<16; idx++) {
-      sprintf(ptr, "%02x", (unsigned char)digest[idx]);
-      ptr += 2;
+      snprintf(byte, sizeof(byte), "%02x", (unsigned char)digest[idx]);
+      strlcat(ascii, byte, sizeof(ascii));
    }
 
    return ascii;
@@ -541,9 +542,9 @@ int PcnetUpsDriver::wait_for_data(int wait_time)
 
       Dmsg(100, "Waiting for %d.%d\n", tv.tv_sec, tv.tv_usec);
       FD_ZERO(&rfds);
-      FD_SET(_ups->fd, &rfds);
+      FD_SET(_fd, &rfds);
 
-      retval = select(_ups->fd + 1, &rfds, NULL, NULL, &tv);
+      retval = select(_fd + 1, &rfds, NULL, NULL, &tv);
 
       if (retval == 0) {
          /* No chars available in TIMER seconds. */
@@ -557,7 +558,7 @@ int PcnetUpsDriver::wait_for_data(int wait_time)
 
       do {
          fromlen = sizeof(from);
-         retval = recvfrom(_ups->fd, buf, sizeof(buf)-1, 0, (struct sockaddr*)&from, &fromlen);
+         retval = recvfrom(_fd, buf, sizeof(buf)-1, 0, (struct sockaddr*)&from, &fromlen);
       } while (retval == -1 && (errno == EAGAIN || errno == EINTR));
 
       if (retval < 0) {            /* error */
@@ -623,18 +624,18 @@ bool PcnetUpsDriver::Open()
       _ipaddr = ptr;
       ptr = strchr(ptr, ':');
       if (ptr == NULL)
-         Error_abort0("Malformed DEVICE [ip:user:pass]\n");
+         Error_abort("Malformed DEVICE [ip:user:pass]\n");
       *ptr++ = '\0';
       
       _user = ptr;
       ptr = strchr(ptr, ':');
       if (ptr == NULL)
-         Error_abort0("Malformed DEVICE [ip:user:pass]\n");
+         Error_abort("Malformed DEVICE [ip:user:pass]\n");
       *ptr++ = '\0';
 
       _pass = ptr;
       if (*ptr == '\0')
-         Error_abort0("Malformed DEVICE [ip:user:pass]\n");
+         Error_abort("Malformed DEVICE [ip:user:pass]\n");
 
       // Last segment is optional port number
       ptr = strchr(ptr, ':');
@@ -647,24 +648,38 @@ bool PcnetUpsDriver::Open()
       }
    }
 
-   _ups->fd = socket(PF_INET, SOCK_DGRAM, 0);
-   if (_ups->fd == -1)
-      Error_abort1("Cannot create socket (%d)\n", errno);
+   _fd = socket_cloexec(PF_INET, SOCK_DGRAM, 0);
+   if (_fd == INVALID_SOCKET)
+      Error_abort("Cannot create socket (%d)\n", errno);
 
+   // Although SO_BROADCAST is typically described as enabling broadcast
+   // *transmission* (which is not what we want) on some systems it appears to
+   // be needed for broadcast reception as well. We will attempt to set it
+   // everywhere and not worry if it fails.
    int enable = 1;
-   setsockopt(_ups->fd, SOL_SOCKET, SO_BROADCAST, (const char*)&enable, sizeof(enable));
+   (void)setsockopt(_fd, SOL_SOCKET, SO_BROADCAST, 
+      (const char*)&enable, sizeof(enable));
 
    memset(&addr, 0, sizeof(addr));
    addr.sin_family = AF_INET;
    addr.sin_port = htons(port);
    addr.sin_addr.s_addr = INADDR_ANY;
-   if (bind(_ups->fd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
-      close(_ups->fd);
-      Error_abort1("Cannot bind socket (%d)\n", errno);
+   if (bind(_fd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
+      close(_fd);
+      Error_abort("Cannot bind socket (%d)\n", errno);
    }
 
    /* Reset datatime to now */
    time(&_datatime);
+
+   /*
+    * Note, we set _ups->fd here so the "core" of apcupsd doesn't
+    * think we are a slave, which is what happens when it is -1.
+    * (ADK: Actually this only appears to be true for apctest as
+    * apcupsd proper uses the UPS_slave flag.)
+    * Internally, we use the fd in our own private space
+    */
+   _ups->fd = 1;
 
    write_unlock(_ups);
    return 1;
@@ -674,8 +689,8 @@ bool PcnetUpsDriver::Close()
 {
    write_lock(_ups);
    
-   close(_ups->fd);
-   _ups->fd = -1;
+   close(_fd);
+   _fd = INVALID_SOCKET;
 
    write_unlock(_ups);
    return 1;
@@ -694,6 +709,9 @@ bool PcnetUpsDriver::get_capabilities()
    int rc = wait_for_data(COMMLOST_TIMEOUT);
    if (rc)
    {
+// Disable workaround ... recent Smart-UPS RT 5000 XL don't have this issue
+// and workaround is causing bad readings
+#if 0
       /*
        * Check for quirk where UPS reports runtime remaining in seconds
        * instead of the usual minutes. So far this has been reported on
@@ -709,6 +727,7 @@ bool PcnetUpsDriver::get_capabilities()
          if (_ups->UPS_Cap[CI_RUNTIM])
             _ups->TimeLeft /= 60; // Adjust initial value
       }
+#endif
    }
 
    return _ups->UPS_Cap[CI_STATUS];
@@ -766,7 +785,8 @@ bool PcnetUpsDriver::kill_power()
 {
    struct sockaddr_in addr;
    char data[1024];
-   int s, len=0, temp=0;
+   sock_t s;
+   int len=0, temp=0;
    char *start;
    const char *cs, *hash;
    struct pair *map;
@@ -775,14 +795,14 @@ bool PcnetUpsDriver::kill_power()
 
    /* We cannot perform a killpower without authentication data */
    if (!_auth) {
-      Error_abort0("Cannot perform killpower without authentication "
+      Error_abort("Cannot perform killpower without authentication "
                    "data. Please set ip:user:pass for DEVICE in "
                    "apcupsd.conf.\n");
    }
 
    /* Open a TCP stream to the UPS */
-   s = socket(PF_INET, SOCK_STREAM, 0);
-   if (s == -1) {
+   s = socket_cloexec(PF_INET, SOCK_STREAM, 0);
+   if (s == INVALID_SOCKET) {
       Dmsg(100, "pcnet_ups_kill_power: Unable to open socket: %s\n",
          strerror(errno));
       return 0;
@@ -816,14 +836,15 @@ bool PcnetUpsDriver::kill_power()
    }
 
    /*
-    * Clear buffer and read data until we find the 0-length
-    * chunk. We know that AP9617 uses chunked encoding, so we
+    * Read data until we find the 0-length chunk. 
+    * We know that AP9617 uses chunked encoding, so we
     * can count on the 0-length chunk at the end.
     */
-   memset(data, 0, sizeof(data));
    do {
       len += temp;
-      temp = recv(s, data+len, sizeof(data)-len, 0);
+      temp = recv(s, data+len, sizeof(data)-len-1, 0);
+      if (temp >= 0)
+         data[len+temp] = '\0';
    } while(temp > 0 && strstr(data, "\r\n0\r\n") == NULL);
 
    Dmsg(200, "Response:\n---\n%s---\n", data);

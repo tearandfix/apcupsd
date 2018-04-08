@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #ifndef _NET_H
@@ -64,7 +64,7 @@ private:
    char _device[MAXSTRING];
    char *_hostname;
    int _port;
-   int _sockfd;
+   sock_t _sockfd;
    bool _got_caps;
    bool _got_static_data;
    time_t _last_fill_time;

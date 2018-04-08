@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -127,7 +127,7 @@ NetUpsDriver::NetUpsDriver(UPSINFO *ups) :
    UpsDriver(ups),
    _hostname(NULL),
    _port(0),
-   _sockfd(-1),
+   _sockfd(INVALID_SOCKET),
    _got_caps(false),
    _got_static_data(false),
    _last_fill_time(0),
@@ -203,16 +203,16 @@ bool NetUpsDriver::poll_ups()
 
    Dmsg(20, "Opening connection to %s:%d\n", _hostname, _port);
    if ((_sockfd = net_open(_hostname, NULL, _port)) < 0) {
-      Dmsg(90, "Exit poll_ups 0 comm lost\n");
+      Dmsg(90, "Exit poll_ups 0 comm lost: %s\n", strerror(-_sockfd));
       if (!_ups->is_commlost()) {
          _ups->set_commlost();
       }
       return false;
    }
 
-   if (net_send(_sockfd, "status", 6) != 6) {
+   if ((n = net_send(_sockfd, "status", 6)) != 6) {
       net_close(_sockfd);
-      Dmsg(90, "Exit poll_ups 0 no status flag\n");
+      Dmsg(90, "Exit poll_ups 0 net_send fails: %s\n", strerror(-n));
       _ups->set_commlost();
       return false;
    }
@@ -227,7 +227,7 @@ bool NetUpsDriver::poll_ups()
 
    if (n < 0) {
       stat = 0;
-      Dmsg(90, "Exit poll_ups 0 bad stat net_recv\n");
+      Dmsg(90, "Exit poll_ups 0 bad stat net_recv: %s\n", strerror(-n));
       _ups->set_commlost();
    } else {
       _ups->clear_commlost();

@@ -14,6 +14,7 @@
 #include "compat.h"
 #include "winups.h"
 #include "winservice.h"
+#include <stdio.h>
 
 // Error message logging
 void LogErrorMsg(const char *msg, const char *fname, int lineno);
@@ -176,7 +177,7 @@ void upsService::ServiceStop()
 // SERVICE INSTALL ROUTINE
 int upsService::InstallService(bool quiet)
 {
-   const int MAXPATH = 2048;
+   const unsigned int MAXPATH = 2048;
 
    // Get the filename of this executable
    char path[MAXPATH];

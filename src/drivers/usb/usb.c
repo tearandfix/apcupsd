@@ -21,8 +21,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -1114,7 +1114,7 @@ bool UsbUpsDriver::kill_power()
     * at least place a harmless command in it. We use CI_STATUS as that is a
     * usage any UPS should have.
     */
-   read_int_from_ups(CI_STATUS, &val);
+   (void)read_int_from_ups(CI_STATUS, &val);
 
    Dmsg(200, "Leave usb_ups_kill_power\n");
    return hibernate;
@@ -1243,4 +1243,14 @@ bool UsbUpsDriver::usb_report_event(int ci, USB_VALUE *uval)
    default:
       return false;
    }
+}
+
+/* Constructor for s_usb_value */
+UsbUpsDriver::s_usb_value::s_usb_value() :
+   value_type(V_DEFAULT), 
+   dValue(0), 
+   iValue(0), 
+   UnitName("Uninitialized")
+{
+   strlcpy(sValue, "Uninitialized", sizeof(sValue));
 }
