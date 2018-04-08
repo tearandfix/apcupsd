@@ -19,7 +19,7 @@
 //
 // Author          : Christopher S. Hull
 // Created On      : Sat Jan 31 15:55:00 2004
-// $Id: compat.cpp,v 1.22.2.5 2010/09/10 14:50:12 adk0212 Exp $
+// $Id: compat.cpp,v 1.22.2.5 2010-09-10 14:50:12 adk0212 Exp $
 
 #include "apc.h"
 #include "compat.h"

@@ -92,11 +92,10 @@
 #define UPS_shut_emerg    0x00400000    /* Set when battery power has failed */
 #define UPS_shut_remote   0x00800000    /* Set when remote shutdown */
 #define UPS_plugged       0x01000000    /* Set if computer is plugged into UPS */
-#define UPS_dev_setup     0x02000000    /* Set if UPS's driver did the setup() */
 #define UPS_battpresent   0x04000000    /* Indicates if battery is connected */
 
 #define UPS_LOCAL_BITS (UPS_commlost|UPS_shutdown|UPS_slave|UPS_slavedown| \
-            UPS_onbatt_msg|UPS_fastpoll|UPS_plugged|UPS_dev_setup| \
+            UPS_onbatt_msg|UPS_fastpoll|UPS_plugged| \
             UPS_shut_load|UPS_shut_btime|UPS_shut_ltime|UPS_shut_emerg)
 
 /*
@@ -378,39 +377,15 @@ enum {
 #define Error_abort6(fmd, arg1,arg2,arg3,arg4,arg5,arg6) error_out(__FILE__, __LINE__, fmd, arg1,arg2,arg3,arg4,arg5,arg5)
 
 
-/*
- * The digit following Dmsg and Emsg indicates the number of substitutions in
- * the message string. We need to do this kludge because non-GNU compilers
- * do not handle varargs #defines.
- */
-
 /* Debug Messages that are printed */
 #ifdef DEBUG
 
-#define Dmsg0(lvl, msg)             d_msg(__FILE__, __LINE__, lvl, msg)
-#define Dmsg1(lvl, msg, a1)         d_msg(__FILE__, __LINE__, lvl, msg, a1)
-#define Dmsg2(lvl, msg, a1, a2)     d_msg(__FILE__, __LINE__, lvl, msg, a1, a2)
-#define Dmsg3(lvl, msg, a1, a2, a3) d_msg(__FILE__, __LINE__, lvl, msg, a1, a2, a3)
-#define Dmsg4(lvl, msg, arg1, arg2, arg3, arg4) d_msg(__FILE__, __LINE__, lvl, msg, arg1, arg2, arg3, arg4)
-#define Dmsg5(lvl, msg, a1, a2, a3, a4, a5) d_msg(__FILE__, __LINE__, lvl, msg, a1, a2, a3, a4, a5)
-#define Dmsg6(lvl, msg, a1, a2, a3, a4, a5, a6) d_msg(__FILE__, __LINE__, lvl, msg, a1, a2, a3, a4, a5, a6)
-#define Dmsg7(lvl, msg, a1, a2, a3, a4, a5, a6, a7) d_msg(__FILE__, __LINE__, lvl, msg, a1, a2, a3, a4, a5, a6, a7)
-#define Dmsg8(lvl, msg, a1, a2, a3, a4, a5, a6, a7, a8) d_msg(__FILE__, __LINE__, lvl, msg, a1, a2, a3, a4, a5, a6, a7, a8)
-#define Dmsg11(lvl,msg,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11) d_msg(__FILE__,__LINE__,lvl,msg,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11)
+#define Dmsg(lvl, msg, args...)     d_msg(__FILE__, __LINE__, lvl, msg, ##args)
 void d_msg(const char *file, int line, int level, const char *fmt, ...);
 
 #else
 
-#define Dmsg0(lvl, msg)
-#define Dmsg1(lvl, msg, a1)
-#define Dmsg2(lvl, msg, a1, a2)
-#define Dmsg3(lvl, msg, a1, a2, a3)
-#define Dmsg4(lvl, msg, arg1, arg2, arg3, arg4)
-#define Dmsg5(lvl, msg, a1, a2, a3, a4, a5)
-#define Dmsg6(lvl, msg, a1, a2, a3, a4, a5, a6)
-#define Dmsg7(lvl, msg, a1, a2, a3, a4, a5, a6, a7)
-#define Dmsg8(lvl, msg, a1, a2, a3, a4, a5, a6, a7, a8)
-#define Dmsg11(lvl,msg,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11)
+#define Dmsg(lvl, msg, args...)
 
 #endif
 

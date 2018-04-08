@@ -19,7 +19,7 @@
 //
 // Author          : Christopher S. Hull
 // Created On      : Sat Jan 31 15:55:00 2004
-// $Id: netcompat.c,v 1.1.2.1 2009/07/31 14:20:35 adk0212 Exp $
+// $Id: netcompat.c,v 1.1.2.1 2009-07-31 14:20:35 adk0212 Exp $
 
 #include "apc.h"
 #include "compat.h"

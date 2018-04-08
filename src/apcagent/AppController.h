@@ -30,7 +30,12 @@
 
 class StatMgr;
 
-@interface StatusTableDataSource: NSObject
+// Prior to 10.6, NSTableViewDataSource was an informal protocol
+#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1060
+@protocol NSTableViewDataSource <NSObject> @end
+#endif 
+
+@interface StatusTableDataSource: NSObject <NSTableViewDataSource>
 {
    NSLock *_mutex;
    NSMutableArray *_keys;
@@ -45,7 +50,7 @@ class StatMgr;
    row:(int)rowIndex;
 @end
 
-@interface EventsTableDataSource: NSObject
+@interface EventsTableDataSource: NSObject <NSTableViewDataSource>
 {
    NSLock *mutex;
    NSMutableArray *strings;
@@ -119,7 +124,8 @@ class StatMgr;
    EventsTableDataSource *eventsDataSource;
    bool updateEvents;
 
-NSString *lastStatus;
+   // Previous status, used to detect changes
+   NSString *lastStatus;
 
    // Timer for UPS polling
    NSTimer *timer;

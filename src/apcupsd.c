@@ -91,7 +91,8 @@ void apcupsd_terminate(int sig)
 
    clean_threads();
    clear_files();
-   device_close(ups);
+   if (ups->driver)
+      device_close(ups);
    delete_lockfile(ups);
    if (pidcreated)
       unlink(pidfile);
@@ -103,7 +104,8 @@ void apcupsd_terminate(int sig)
 
 void apcupsd_error_cleanup(UPSINFO *ups)
 {
-   device_close(ups);
+   if (ups->driver)
+      device_close(ups);
    delete_lockfile(ups);
    if (pidcreated)
       unlink(pidfile);
@@ -196,14 +198,11 @@ int main(int argc, char *argv[])
          dup2(tmp_fd, tmp_fd + i);
    }
 
-   /* If NLS is compiled in, enable NLS messages translation. */
-   textdomain("apcupsd");
-
    /*
     * If there's not one in libc, then we have to use our own version
     * which requires initialization.
     */
-   astrncpy(argvalue, argv[0], sizeof(argvalue));
+   strlcpy(argvalue, argv[0], sizeof(argvalue));
 
    ups = new_ups();                /* get new ups */
    if (!ups)
@@ -216,7 +215,7 @@ int main(int argc, char *argv[])
    if (parse_options(argc, argv))
       exit(1);
 
-   Dmsg0(10, "Options parsed.\n");
+   Dmsg(10, "Options parsed.\n");
 
    if (show_version) {
       printf("apcupsd " APCUPSD_RELEASE " (" ADATE ") " APCUPSD_HOST "\n");
@@ -239,7 +238,7 @@ int main(int argc, char *argv[])
 #endif
 
    check_for_config(ups, cfgfile);
-   Dmsg1(10, "Config file %s processed.\n", cfgfile);
+   Dmsg(10, "Config file %s processed.\n", cfgfile);
 
    /*
     * Disallow --kill-on-powerfail in conjunction with simple signaling
@@ -257,8 +256,6 @@ int main(int argc, char *argv[])
    attach_driver(ups);
    if (ups->driver == NULL)
       Error_abort0("Apcupsd cannot continue without a valid driver.\n");
-
-   Dmsg1(10, "Attached to driver: %s\n", ups->driver->driver_name);
 
    ups->start_time = time(NULL);
 
@@ -281,26 +278,28 @@ int main(int argc, char *argv[])
    }
 
    if (create_lockfile(ups) == LCKERROR) {
-      Error_abort1("Failed to acquire device lock file\n",
-         ups->device);
+      Error_abort0("Unable to create UPS lock file.\n"
+                   "  If apcupsd or apctest is already running,\n"
+                   "  please stop it and run this program again.\n");
    }
 
    make_pid_file();
    pidcreated = 1;
 
-   setup_device(ups);
+   if (hibernate_ups || shutdown_ups)
+   {
+      // If we're hibernating or shutting down the UPS, setup is a one-shot.
+      // If it fails, we're toast; no retries
+      if (!setup_device(ups))
+         Error_abort0("Unable to open UPS device for hibernate or shutdown");
 
-   if (hibernate_ups) {
-      initiate_hibernate(ups);
+      if (hibernate_ups)
+         initiate_hibernate(ups);
+      else
+         initiate_shutdown(ups);
+
       apcupsd_terminate(0);
    }
-   
-   if (shutdown_ups) {
-      initiate_shutdown(ups);
-      apcupsd_terminate(0);
-   }
-
-   prep_device(ups);
 
    /*
     * From now ... we must _only_ start up threads!
@@ -311,7 +310,7 @@ int main(int argc, char *argv[])
    /* Network status information server */
    if (ups->netstats) {
       start_thread(ups, do_server, "apcnis", argv[0]);
-      Dmsg0(10, "NIS thread started.\n");
+      Dmsg(10, "NIS thread started.\n");
    }
 
    log_event(ups, LOG_WARNING,

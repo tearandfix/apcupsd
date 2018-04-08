@@ -4,7 +4,7 @@
  *
  * This header is derived from the PowerNet-MIB module.
  *
- * $Id: powernet-mib.h,v 1.7 2005/11/05 21:09:17 adk0212 Exp $
+ * $Id: powernet-mib.h,v 1.7 2005-11-05 21:09:17 adk0212 Exp $
  */
 
 #ifndef _POWERNET_MIB_H_

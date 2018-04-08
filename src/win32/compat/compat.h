@@ -27,7 +27,7 @@
  * Last Modified By: Thorsten Engel
  * Last Modified On: Fri Apr 22 19:30:00 2004
  * Update Count    : 218
- * $Id: compat.h,v 1.21.2.4 2009/08/01 12:01:59 adk0212 Exp $
+ * $Id: compat.h,v 1.21.2.4 2009-08-01 12:01:59 adk0212 Exp $
  */
 
 
@@ -285,6 +285,10 @@ void syslog(int type, const char *fmt, ...);
 //******************************************************************************
 long int random(void);
 void srandom(unsigned int seed);
+
+/* Should use strtok_s but mingw doesn't have it. strtok is thread-safe on
+ * Windows via TLS, so this substitution should be ok... */
+#define strtok_r(a,b,c) strtok(a,b)
 
 /* Return the smaller of a or b */
 #ifndef MIN

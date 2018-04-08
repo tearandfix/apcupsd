@@ -42,12 +42,7 @@
 
 	Change History (most recent first):
 
-$Log: LoginItemsAE.c,v $
-Revision 1.1.2.2  2009/09/27 23:39:29  adk0212
-Fix login item creation on 10.4. Problem and solution is nicely documented
-by Jake Sprouse here:
-http://jakesprouse.net/2007/03/28/debugging-apples-loginitemsaec-on-intel-macs
-
+$Log: not supported by cvs2svn $
 Revision 1.1.2.1  2009/09/27 18:37:10  adk0212
 Add UPS and HOST info to top of menu a'la apctray on win32. Automatically
 add user login item when apcagent is started for the first time. Remove

@@ -120,7 +120,7 @@ else
    AM_CONDITIONAL(HAVE_GCC, $FALSEPRG)
 fi
 
-dnl Default linker is g++
+dnl Default linker is gcc
 if test x$LD = x ; then
    LD="$CC"
 fi
@@ -175,6 +175,7 @@ AC_REQ_PATH_PROG(SED, sed)
 AC_REQ_PATH_PROG(AR, ar)
 AC_REQ_PATH_PROG(MV, mv)
 
+AC_PATH_PROG(RST2HTML, rst2html,)
 AC_PATH_PROG(RST2HTML, rst2html.py,)
 AC_PATH_PROG(RST2PDF, rst2pdf,)
 
@@ -200,7 +201,7 @@ AC_CHECK_FUNCS(
    [AC_MSG_ERROR([cannot find required function.])]
 )
 
-AC_CHECK_FUNCS(snprintf vsnprintf)
+AC_CHECK_FUNCS(snprintf vsnprintf strlcpy strlcat)
 
 dnl Solaris hides nanosleep in one of two libraries depending on version
 dnl If we can't find it at all we'll just use our own substitute.
@@ -367,9 +368,9 @@ AC_HELP_STRING([--enable-all], [Enable all optional modules])],
       enable_usb=yes
       enable_net=yes
       enable_snmp=yes
-      enable_net_snmp=yes
       enable_test=yes
       enable_pcnet=yes
+      enable_modbus=yes
       enable_cgi=yes
       enable_gapcmon=yes
    fi], [])
@@ -635,6 +636,7 @@ AC_HELP_STRING([--disable-usb], [No USB UPS code (default)])],
       USB_DRIVER="usb"
       AC_SUBST(USB_DRIVER)
       AC_SUBST(USB_TYPE)
+      CPPFLAGS="${CPPFLAGS} -DUSBTYPE=$USB_TYPE"
 
       DISPLAY_USB_DRIVER=$USB_TYPE-$USB_DRIVER
      fi ],
@@ -735,6 +737,19 @@ AC_HELP_STRING([--disable-pcnet], [No PCNET driver])],
    [ AC_DEFINE(HAVE_PCNET_DRIVER)
      PCNET_DRIVER="pcnet"
      AC_SUBST(PCNET_DRIVER) ])
+
+dnl Enable modbus driver
+AC_ARG_ENABLE(modbus, [
+AC_HELP_STRING([--enable-modbus], [Compile MODBUS driver code (default)])
+AC_HELP_STRING([--disable-modbus], [No MODBUS driver])],
+   [ if test "$enableval" = "yes" ; then
+        AC_DEFINE(HAVE_MODBUS_DRIVER)
+        MODBUS_DRIVER="modbus"
+        AC_SUBST(MODBUS_DRIVER)
+     fi],
+   [ AC_DEFINE(HAVE_MODBUS_DRIVER)
+     MODBUS_DRIVER="modbus"
+     AC_SUBST(MODBUS_DRIVER) ])
 
 dnl Force NIS to enabled since libnis is required by apcaccess.
 dnl Users may still disable NIS at runtime in apcupsd.conf.
@@ -846,12 +861,14 @@ if test -n "$GCC"; then
    SUPC="`$CXX -print-file-name=libsupc++.a 2>/dev/null`"
    case "$SUPC" in
    libsupc++.a*)
-      # Library not found, so this is and older GCC...
+      # Library not found, so this is an older GCC...
+      LD="$CXX"
       AC_MSG_RESULT(no)
       ;;
    *)
       # This is gcc 3.x, and it knows of libsupc++, so we need it
       LIBS="$LIBS -lsupc++"
+      LD="$CC"
       AC_MSG_RESULT(yes)
 
       # See if this system has a broken libsupc++ that requires
@@ -1444,7 +1461,7 @@ Configuration on `date`:
   UPSTYPE                     ${UPSTYPE}
   UPSCABLE                    ${UPSCABLE}
 
-  drivers (no-* are disabled): ${APCSMART_DRIVER:-no-apcsmart} ${DUMB_DRIVER:-no-dumb} ${NET_DRIVER:-no-net} ${DISPLAY_USB_DRIVER:-no-usb} ${DISPLAY_SNMP_DRIVER:-no-snmp} ${DISPLAY_NETSNMP_DRIVER:-no-net-snmp} ${PCNET_DRIVER:-no-pcnet} ${TEST_DRIVER:-no-test}
+  drivers (no-* are disabled): ${APCSMART_DRIVER:-no-apcsmart} ${DUMB_DRIVER:-no-dumb} ${NET_DRIVER:-no-net} ${DISPLAY_USB_DRIVER:-no-usb} ${DISPLAY_SNMP_DRIVER:-no-snmp} ${DISPLAY_NETSNMP_DRIVER:-no-net-snmp} ${PCNET_DRIVER:-no-pcnet} ${MODBUS_DRIVER:-no-modbus} ${TEST_DRIVER:-no-test}
 
   enable-nis:                 ${NISSRV_ENABLED}
   with-nisip:                 ${NISIP}

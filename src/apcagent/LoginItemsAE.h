@@ -42,13 +42,7 @@
 
 	Change History (most recent first):
 
-$Log: LoginItemsAE.h,v $
-Revision 1.1.2.1  2009/09/27 18:37:10  adk0212
-Add UPS and HOST info to top of menu a'la apctray on win32. Automatically
-add user login item when apcagent is started for the first time. Remove
-login item when last monitor is removed. Add menu option to remove all
-monitors at once. Reorder menu items slightly.
-
+$Log: not supported by cvs2svn $
 Revision 1.1  2005/09/27 12:29:29  eskimo1
 First checked in.
 

@@ -1,7 +1,7 @@
 /*
  * Define Host machine
  *
- *  Version $Id: winhost.h,v 1.2 2006/04/28 16:34:53 kerns Exp $
+ *  Version $Id: winhost.h,v 1.2 2006-04-28 16:34:53 kerns Exp $
  *
  */
 /*
