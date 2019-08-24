@@ -1,3 +1,11 @@
+apcupsd (3.14.14-3) unstable; urgency=medium
+
+  * debian/control: bump standard to 4.3.0 (no changes)
+  * debian/control: do not depend on rst2pd (-> #929954)
+                    (Closes: #935616)
+
+ -- Thorsten Alteholz <debian@alteholz.de>  Sat, 24 Aug 2019 19:14:07 +0200
+
 apcupsd (3.14.14-2) unstable; urgency=medium
 
   * debian/control: bump standard to 4.1.4 (no changes)

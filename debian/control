@@ -13,14 +13,14 @@ Build-Depends: debhelper (>= 11)
 	, pkg-config
 	, po-debconf
 	, python-docutils
-	, rst2pdf
 	, tcpd
 	, texinfo
 # gconf shall disappear:	, libgtk2.0-dev
 # gconf shall disappear:	, libgconf2-dev
-Standards-Version: 4.1.4
+# will disappear:	, rst2pdf
+Standards-Version: 4.3.0
 Homepage: http://www.apcupsd.org/
-Vcs-Browser: https://salsa.debian.org/alteholz/apcupsd.git
+Vcs-Browser: https://salsa.debian.org/alteholz/apcupsd
 Vcs-Git: https://salsa.debian.org/alteholz/apcupsd.git
 
 Package: apcupsd
