@@ -1,3 +1,10 @@
+apcupsd (3.14.14-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Switch b-d from python-docutils to python3-docutils; Closes: #942946
+
+ -- Sandro Tosi <morph@debian.org>  Sat, 11 Jul 2020 20:36:12 -0400
+
 apcupsd (3.14.14-3) unstable; urgency=medium
 
   * debian/control: bump standard to 4.3.0 (no changes)

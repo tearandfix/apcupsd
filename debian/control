@@ -12,7 +12,7 @@ Build-Depends: debhelper (>= 11)
 	, mawk | awk
 	, pkg-config
 	, po-debconf
-	, python-docutils
+	, python3-docutils
 	, tcpd
 	, texinfo
 # gconf shall disappear:	, libgtk2.0-dev
