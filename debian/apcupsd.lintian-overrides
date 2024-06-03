@@ -1,7 +1,6 @@
-apcupsd: script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/ups-monitor
-apcupsd: init.d-script-does-not-implement-required-option etc/init.d/ups-monitor start
-apcupsd: init.d-script-does-not-implement-required-option etc/init.d/ups-monitor stop
-apcupsd: init.d-script-does-not-implement-required-option etc/init.d/ups-monitor restart
-apcupsd: init.d-script-does-not-implement-required-option etc/init.d/ups-monitor force-reload
-apcupsd: init.d-script-does-not-source-init-functions etc/init.d/ups-monitor
-
+apcupsd: script-in-etc-init.d-not-registered-via-update-rc.d [etc/init.d/ups-monitor]
+apcupsd: init.d-script-does-not-implement-required-option force-reload [etc/init.d/ups-monitor]
+apcupsd: init.d-script-does-not-implement-required-option restart [etc/init.d/ups-monitor]
+apcupsd: init.d-script-does-not-implement-required-option start [etc/init.d/ups-monitor]
+apcupsd: init.d-script-does-not-implement-required-option stop [etc/init.d/ups-monitor]
+apcupsd: init-script-is-not-a-file [etc/init.d/ups-monitor]

@@ -1,6 +1,5 @@
-debian/local/apcupsd_shutdown lib/systemd/system-shutdown
 debian/local/killpower etc/apcupsd
-debian/local/prestart lib/apcupsd
+debian/local/prestart usr/lib/apcupsd
 debian/local/ups-monitor etc/apcupsd
 etc/apcupsd/apccontrol
 etc/apcupsd/apcupsd.conf
@@ -11,5 +10,5 @@ etc/apcupsd/hosts.conf
 etc/apcupsd/multimon.conf
 etc/apcupsd/offbattery
 etc/apcupsd/onbattery
-sbin
+usr/sbin
 #usr/bin

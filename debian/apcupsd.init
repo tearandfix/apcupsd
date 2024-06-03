@@ -16,11 +16,11 @@ test -f /lib/lsb/init-functions || exit 1
 . /lib/lsb/init-functions
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON=/sbin/apcupsd
+DAEMON=/usr/sbin/apcupsd
 CONFIG=/etc/default/apcupsd
 NAME=apcupsd
 DESC="UPS power management"
-APCACCESS=/sbin/apcaccess
+APCACCESS=/usr/sbin/apcaccess
 
 test -x $DAEMON || exit 0
 test -e $CONFIG || exit 0
@@ -40,7 +40,7 @@ case "$1" in
 	start)
 		echo -n "Starting $DESC: "
 
-		/lib/apcupsd/prestart
+		/usr/lib/apcupsd/prestart
 
 		if [ "`pidof apcupsd`" = "" ]
 		then

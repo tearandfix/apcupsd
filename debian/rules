@@ -1,5 +1,8 @@
 #!/usr/bin/make -f
 
+export deb_systemdsystemunitdir = $(shell pkg-config --variable=systemdsystemunitdir systemd)
+export deb_systemdutildir = $(shell pkg-config --variable=systemdutildir systemd)
+
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/buildflags.mk
@@ -13,6 +16,10 @@ export VERBOSE=1
 
 # there is a bug in dh_auto_configure, see #887390
 # so it can not be run under DH_COMPAT>=11
+# do NOT use ${prefix} for --bindir and --sbindir, it does not work with platforms/etc/*.in
+#		--bindir=\$${prefix}/bin \
+#		--sbindir=\$${prefix}/sbin \
+#
 override_dh_auto_configure:
 	DH_COMPAT=10 dh_auto_configure -- \
 		--with-libwrap \
@@ -23,6 +30,8 @@ override_dh_auto_configure:
 		--enable-snmp \
 		--enable-test \
 		--sysconfdir=/etc/apcupsd \
+		--bindir=/usr/bin \
+		--sbindir=/usr/sbin \
 		--with-cgi-bin=\$${prefix}/lib/cgi-bin/apcupsd \
 		--with-pid-dir=/var/run \
 		--with-log-dir=/var/log \
@@ -33,13 +42,22 @@ override_dh_auto_configure:
 		--with-nisip=127.0.0.1 \
 		--with-upstype=usb \
 		--with-upscable=usb \
-		SHUTDOWN=/sbin/shutdown
+		SHUTDOWN=/sbin/shutdown \
+		SCRIPTSHELL=/bin/sh
 # as gconf shall disappear, do not enable gapcom
 #		--enable-gapcmon
 
 override_dh_auto_build:
 	dh_auto_build
 	make -C doc/manual manual.pdf
+
+override_dh_install:
+	dh_install
+	dh_install -papcupsd debian/local/apcupsd_shutdown $(deb_systemdutildir)/system-shutdown/
+
+override_dh_link:
+	dh_link
+	dh_link -papcupsd /dev/null $(deb_systemdsystemunitdir)/ups-monitor.service
 
 override_dh_installinit:
 	dh_installinit --no-restart-on-upgrade --init-script=apcupsd
@@ -54,5 +72,5 @@ override_dh_fixperms-arch:
 	dh_fixperms
 	chmod 0755 debian/apcupsd/etc/apcupsd/killpower
 	chmod 0755 debian/apcupsd/etc/apcupsd/ups-monitor
-	chmod 0755 debian/apcupsd/lib/apcupsd/prestart
-	chmod 0755 debian/apcupsd/lib/systemd/system-shutdown/apcupsd_shutdown
+	chmod 0755 debian/apcupsd/usr/lib/apcupsd/prestart
+	chmod 0755 debian/apcupsd/$(deb_systemdutildir)/system-shutdown/apcupsd_shutdown

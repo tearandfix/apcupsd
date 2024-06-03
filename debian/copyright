@@ -21,9 +21,8 @@ License: cygwin-license
 
 Files: debian/*
 Copyright: 2007-2009 Daniel Baumann <daniel@debian.org>
-           2017 Thorsten Alteholz <debian@alteholz.de>
+           2017-2024 Thorsten Alteholz <debian@alteholz.de>
 License: GPL-2+
-
 
 License: cygwin-license
  Cygwin is free software.  Red Hat, Inc. licenses Cygwin to you under the
@@ -70,9 +69,9 @@ License: cygwin-license
  files, which are not considered part of Cygwin and are not governed by
  GPLv3+, in source or binary form.
  .
- winsup	estsuite\winsup.api\msgtest.c
- winsup	estsuite\winsup.api\semtest.c
- winsup	estsuite\winsup.api\shmtest.c
+ winsup estsuite\winsup.api\msgtest.c
+ winsup estsuite\winsup.api\semtest.c
+ winsup estsuite\winsup.api\shmtest.c
  .
  Red Hat grants you permission to link or combine code in Cygwin with
  code in or corresponding to the following files, which are not

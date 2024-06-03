@@ -1,3 +1,18 @@
+apcupsd (3.14.14-4) experimental; urgency=medium
+
+  * upload to experimental
+  * Move files into /usr. (Closes: #1057900)
+    (Thanks to Chris Hofstaedtler for the patch)
+  * debian/rules: add $SCRIPTSHELL (Closes: #1024288)
+    (Thanks to Vagrant Cascadian for the patch)
+  * debian/control: bump standard to 4.7.0 (no changes)
+  * debian/control: use dh11
+  * debian/control: add Rules-Requires-Root: no
+  * debian/watch: update to version 4
+  * avoid exclusionary language in configuration files (Closes: #892769)
+
+ -- Thorsten Alteholz <debian@alteholz.de>  Mon, 03 Jun 2024 19:14:07 +0200
+
 apcupsd (3.14.14-3.1) unstable; urgency=medium
 
   * Non-maintainer upload.
