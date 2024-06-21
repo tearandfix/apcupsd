@@ -10,10 +10,6 @@ HOSTNAME=`hostname`
 MSG="$HOSTNAME Communications with UPS $1 lost"
 #
 (
-   echo "Subject: $MSG"
-   echo " "
    echo "$MSG"
-   echo " "
-   @sbindir@/apcaccess status
 ) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
 exit 0

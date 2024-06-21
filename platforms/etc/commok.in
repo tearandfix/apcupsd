@@ -10,8 +10,6 @@ HOSTNAME=`hostname`
 MSG="$HOSTNAME Communications with UPS $1 restored"
 #
 (
-   echo "Subject: $MSG"
-   echo " "
    echo "$MSG"
    echo " "
    @sbindir@/apcaccess status

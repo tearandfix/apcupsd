@@ -10,8 +10,6 @@ HOSTNAME=`hostname`
 MSG="$HOSTNAME UPS $1 Power Failure !!!"
 #
 (
-   echo "Subject: $MSG"
-   echo " "
    echo "$MSG"
    echo " "
    @sbindir@/apcaccess status

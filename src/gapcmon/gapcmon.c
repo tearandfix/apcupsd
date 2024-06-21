@@ -1580,7 +1580,7 @@ static gint gapc_util_change_icons(PGAPC_MONITOR pm)
          scaled = gdk_pixbuf_scale_simple(pixbuf, size, size, GDK_INTERP_BILINEAR);
          gtk_image_set_from_pixbuf(GTK_IMAGE(pm->tray_image), scaled);
          gtk_widget_show(pm->tray_image);
-         gdk_pixbuf_unref(scaled);
+         g_object_unref(scaled);
       }
 
       if (pm->window != NULL)
@@ -2889,7 +2889,7 @@ static void gapc_util_log_app_msg(gchar * pch_func, gchar * pch_topic,
 
    pch = g_strdup_printf("%s(%s) emsg=%s", pch_func, pch_topic, pch_emsg);
 
-   g_message(pch);
+   g_message("%s",pch);
 
    g_free(pch);
 
@@ -4450,7 +4450,7 @@ static gint gapc_panel_about_page(GtkNotebook * notebook, gchar * pch_pname,
       "<i>http://gapcmon.sourceforge.net/</i>\n\n"
       "Copyright \xC2\xA9 2006 James Scott, Jr.\n"
       "skoona@users.sourceforge.net\n\n"
-      "Released under the GNU Public License\n"
+      "Released under the GNU General Public License\n"
       "%s comes with\nABSOLUTELY NO WARRANTY", pch_pname);
 
    /* Create About page */
@@ -4474,7 +4474,7 @@ static gint gapc_panel_about_page(GtkNotebook * notebook, gchar * pch_pname,
    gtk_image_set_from_pixbuf(GTK_IMAGE(image), scaled);
    gtk_box_pack_start(GTK_BOX(hbox), image, TRUE, TRUE, 0);
    gtk_widget_show(image);
-   gdk_pixbuf_unref(scaled);
+   g_object_unref(scaled);
 
    label = gtk_label_new(about_text);
    gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
@@ -5753,7 +5753,7 @@ static gint gapc_monitor_information_page(PGAPC_MONITOR pm, GtkWidget * notebook
 
    label = gtk_label_new("Selftest running\n" "Number of transfers\n"
       "Reason last transfer\n" "Last transfer to battery\n"
-      "Last transfer off battery\n" "Time on battery\n" "Cummulative on battery");
+      "Last transfer off battery\n" "Time on battery\n" "Cumulative on battery");
    gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
    gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_RIGHT);
    gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);

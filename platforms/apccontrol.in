@@ -2,8 +2,6 @@
 #
 # Copyright (C) 1999-2002 Riccardo Facchetti <riccardo@master.oasi.gpa.it>
 #
-#  for apcupsd release @VERSION@ (@DATE@) - @DISTNAME@
-#
 # @configure_input@
 #
 #  Note, this is a generic file that can be used by most
@@ -62,10 +60,10 @@ fi
 
 case "$1" in
     killpower)
-	echo "Apccontrol doing: ${APCUPSD} --killpower on UPS ${2}" | ${WALL}
+	echo "Apccontrol doing: ${APCUPSD} --killpower on UPS ${2}" | (${WALL} 2>/dev/null || cat)
 	sleep 10
 	${APCUPSD} --killpower
-	echo "Apccontrol has done: ${APCUPSD} --killpower on UPS ${2}" | ${WALL}
+	echo "Apccontrol has done: ${APCUPSD} --killpower on UPS ${2}" | (${WALL} 2>/dev/null || cat)
     ;;
     commfailure)
 	echo "Warning communications lost with UPS ${2}" | ${WALL}

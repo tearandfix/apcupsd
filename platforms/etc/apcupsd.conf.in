@@ -1,7 +1,5 @@
 ## apcupsd.conf v1.1 ##
 # 
-#  for apcupsd release @VERSION@ (@DATE@) - @DISTNAME@
-#
 # "apcupsd" POSIX config file
 
 #
@@ -101,7 +99,8 @@ DEVICE @SERIALDEV@
 #POLLTIME 60
 
 # LOCKFILE <path to lockfile>
-#   Path for device lock file. This is the directory into which the lock file
+#   Path for device lock file for UPSes connected via USB or
+#   serial port. This is the directory into which the lock file
 #   will be written. The directory must already exist; apcupsd will not create
 #   it. The actual name of the lock file is computed from DEVICE.
 #   Not used on Win32.

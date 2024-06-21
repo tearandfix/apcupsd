@@ -10483,6 +10483,11 @@ cat >>confdefs.h <<\_ACEOF
 #define HAVE_FREEBSD_OS /**/
 _ACEOF
  ;;
+   *-*-kfreebsd*)
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_FREEBSD_OS /**/
+_ACEOF
+ ;;
    *-*-netbsd*)
 cat >>confdefs.h <<\_ACEOF
 #define HAVE_NETBSD_OS /**/

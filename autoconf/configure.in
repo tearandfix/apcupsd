@@ -359,6 +359,7 @@ case $host in
    *-*-hpux*)    AC_DEFINE(HAVE_HPUX_OS,,    [Define if building for HPUX])    ;;
    *-*-linux*)   AC_DEFINE(HAVE_LINUX_OS,,   [Define if building for Linux])   ;;
    *-*-freebsd*) AC_DEFINE(HAVE_FREEBSD_OS,, [Define if building for FreeBSD]) ;;
+   *-*-kfreebsd*)AC_DEFINE(HAVE_FREEBSD_OS,, [Define if building for kFreeBSD]) ;;
    *-*-netbsd*)  AC_DEFINE(HAVE_NETBSD_OS,,  [Define if building for NetBSD])  ;;
    *-*-openbsd*) AC_DEFINE(HAVE_OPENBSD_OS,, [Define if building for OpenBSD]) ;;
    *-*-bsdi*)    AC_DEFINE(HAVE_BSDI_OS,,    [Define if building for BSDi])    ;;

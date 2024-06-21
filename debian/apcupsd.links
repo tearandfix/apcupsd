@@ -1,1 +1,2 @@
+/dev/null /lib/systemd/system/ups-monitor.service
 /etc/apcupsd/ups-monitor /etc/init.d/ups-monitor

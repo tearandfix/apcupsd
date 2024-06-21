@@ -61,17 +61,17 @@ UPSCOMMANDS ups_event[] = {
  * and the defines in include/apc_defines.h 
  */
 UPSCMDMSG event_msg[] = {
-   {LOG_CRIT,    "Power failure."},
+   {LOG_ALERT,   "Power failure."},
    {LOG_CRIT,    "Running on UPS batteries."},
    {LOG_ALERT,   "Battery power exhausted."},
    {LOG_ALERT,   "Reached run time limit on batteries."},
    {LOG_ALERT,   "Battery charge below low limit."},
    {LOG_ALERT,   "Reached remaining time percentage limit on batteries."},
    {LOG_ALERT,   "Initiating system shutdown!"},
-   {LOG_ALERT,   "Power is back. UPS running on mains."},
-   {LOG_ALERT,   "Users requested to logoff."},
+   {LOG_CRIT,    "Power is back. UPS running on mains."},
+   {LOG_CRIT,    "Users requested to logoff."},
    {LOG_ALERT,   "Battery failure. Emergency."},
-   {LOG_CRIT,    "UPS battery must be replaced."},
+   {LOG_ALERT,   "UPS battery must be replaced."},
    {LOG_CRIT,    "Remote shutdown requested."},
    {LOG_WARNING, "Communications with UPS lost."},
    {LOG_WARNING, "Communications with UPS restored."},
@@ -208,7 +208,8 @@ static void do_shutdown(UPSINFO *ups, int cmdtype)
    delete_lockfile(ups);
    ups->set_fastpoll();
    make_file(ups, ups->pwrfailpath);
-   prohibit_logins(ups);
+   if (ups->nologin.type != NEVER)
+      prohibit_logins(ups);
 
    if (!ups->is_slave()) {
       /*
