@@ -198,7 +198,8 @@ class UPSINFO {
    void set_battpresent() { Status |= UPS_battpresent; };
    void set_battpresent(int val) { if (val) set_battpresent(); else clear_battpresent(); };
 
-   bool is_battlow() const { return (Status & UPS_battlow) == UPS_battlow; };
+   //bool is_battlow() const { return (Status & UPS_battlow) == UPS_battlow; };
+   bool is_battlow() const { return false; };
    bool is_boost() const { return (Status & UPS_boost) == UPS_boost; };
    bool is_calibration() const { return (Status & UPS_calibration) == UPS_calibration; };
    bool is_commlost() const { return (Status & UPS_commlost) == UPS_commlost; };

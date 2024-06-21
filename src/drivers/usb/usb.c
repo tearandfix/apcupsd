@@ -429,13 +429,15 @@ void UsbUpsDriver::usb_process_value(int ci, USB_VALUE* uval)
 
    /* BATT_FULL Battery level percentage */
    case CI_BATTLEV:
-      _ups->BattChg = uval->dValue;
+      //_ups->BattChg = uval->dValue;
       Dmsg(200, "BattCharge = %d\n", (int)_ups->BattChg);
       break;
 
    /* BATT_VOLTAGE */
    case CI_VBATT:
       _ups->BattVoltage = uval->dValue;
+      _ups->BattChg = (uval->dValue - 12) / (13.6 - 12) * 100;
+      Dmsg(200, "BattCharge = %d\n", (int)_ups->BattChg);
       Dmsg(200, "BattVoltage = %d\n", (int)_ups->BattVoltage);
       break;
 
@@ -453,7 +455,8 @@ void UsbUpsDriver::usb_process_value(int ci, USB_VALUE* uval)
 
    /* UPS_RUNTIME_LEFT */
    case CI_RUNTIM:
-      _ups->TimeLeft = uval->dValue / 60; /* convert to minutes */
+      //_ups->TimeLeft = uval->dValue / 60; /* convert to minutes */
+      _ups->TimeLeft = 30;
       Dmsg(200, "TimeLeft = %d\n", (int)_ups->TimeLeft);
       break;
 

@@ -260,8 +260,8 @@ bool StatMgr::GetSummary(int &battstat, astring &statstr, astring &upsname)
       statstr += "ONBATT ";
    if (status & UPS_overload)
       statstr += "OVERLOAD ";
-   if (status & UPS_battlow)
-      statstr += "LOWBATT ";
+   /*if (status & UPS_battlow)*/
+   /*   statstr += "LOWBATT ";*/
    if (status & UPS_replacebatt)
       statstr += "REPLACEBATT ";
    if (!(status & UPS_battpresent))
